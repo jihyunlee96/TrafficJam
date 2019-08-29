@@ -17,11 +17,19 @@ class TrafficLightAgent(nn.Module):
 
     def __init__(self, h, w, outputs):
         super(TrafficLightAgent, self).__init__()
+
+        # CNN Structure
         self.conv1 = nn.Conv2d(???, 32, kernel_size=8, stride=4)
         self.bn1 = nn.BatchNorm2d(32)
-        self.max1 = 
+        self.max1 = nn.MaxPool2d(2)
+        self.drop1 = nn.Dropout(p=0.3)
         self.conv2 = nn.Conv2d(32, 16, kernel_size=4, stride=2)
         self.bn2 = nn.BatchNorm2d(16)
+        self.max2 = nn.MaxPool2d(2)
+        self.drop2 = nn.Dropout(p=0.3)
+        self.flat = torch.flatten()
+
+        # 
 
         # Number of Linear input connections depends on output of conv2d layers
         # and therefore the input image size, so compute it.
