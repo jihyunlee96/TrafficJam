@@ -14,22 +14,38 @@ import torchvision.transforms as T
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class TrafficLightAgent(nn.Module):
+    '''
+    Network Structure
+    ==================
+
+    Input: Number of Cars (each bit = number of cars in one lane), Signal Phase (Phase ID / ex. WE-Gr = 0, NS-Gr = 1)
+
+    1. Concat the Number of Cars and Signal Phase
+    2. Through Fully Connected Layer, create Embedded Input
+    3. There are several rules, seperated by phases, that takes Embedded Input and outputs q_values of it
+    4. For each Phase, there are seperate Selectors, which selects signal phase
+    5. Multiply q_values and Selector's result
+    6. Add it to list
+    7. After all phases tested, add all of them
+    8. With the result, through argmax, choose the action
+    '''
 
     def __init__(self, h, w, outputs):
         super(TrafficLightAgent, self).__init__()
 
-        # CNN Structure
-        self.conv1 = nn.Conv2d(???, 32, kernel_size=8, stride=4)
-        self.bn1 = nn.BatchNorm2d(32)
-        self.max1 = nn.MaxPool2d(2)
-        self.drop1 = nn.Dropout(p=0.3)
-        self.conv2 = nn.Conv2d(32, 16, kernel_size=4, stride=2)
-        self.bn2 = nn.BatchNorm2d(16)
-        self.max2 = nn.MaxPool2d(2)
-        self.drop2 = nn.Dropout(p=0.3)
-        self.flat = torch.flatten()
+        self.shared_hidden_1 = nn.Linear(17, 20) # activation : Sigmoid
 
-        # 
+        # Phase Gate - seperated routes by phases
+        self.seperated_hidden_1 = nn.Linear(20, 20) # activation : Sigmoid
+        self.q_values_hidden_1 = nn.Linear(20, number_of_actions) #  activation : Linear (?)
+        self.selector_1 = Selector()
+        self.multiply
+
+        self.seperated_hidden_2 = nn.Linear(20, 20) # activation : Sigmoid
+        self.q_values_hidden_2 = nn.Linear(20, number_of_actions) #  activation : Linear (?)
+        
+
+        
 
         # Number of Linear input connections depends on output of conv2d layers
         # and therefore the input image size, so compute it.
