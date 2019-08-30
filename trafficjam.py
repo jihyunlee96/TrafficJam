@@ -39,22 +39,25 @@ class TrafficLightAgent(nn.Module):
         self.seperated_hidden_1 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_1 = nn.Linear(20, number_of_actions) #  activation : Linear (?)
         self.linear_act_hidden_1 = nn.linear(number_of_actions, number_of_actions)
+        self.selector_hidden_1 = Selector(torch.Tensor([0]))
 
         self.seperated_hidden_2 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_2 = nn.Linear(20, number_of_actions) #  activation : Linear (?)
         self.linear_act_hidden_2 = nn.linear(number_of_actions, number_of_actions)
+        self.selector_hidden_2 = Selector(torch.Tensor([1]))
 
         self.seperated_hidden_3 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_3 = nn.Linear(20, number_of_actions) #  activation : Linear (?)
         self.linear_act_hidden_3 = nn.linear(number_of_actions, number_of_actions)
+        self.selector_hidden_3 = Selector(torch.Tensor([2]))
 
         self.seperated_hidden_4 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_4 = nn.Linear(20, number_of_actions) #  activation : Linear (?)
         self.linear_act_hidden_4 = nn.linear(number_of_actions, number_of_actions)
+        self.selector_hidden_4 = Selector(torch.Tensor([3]))
 
         self.sigmoid = nn.Sigmoid()
         
-        self.selector_1 = Selector()
         self.multiply
 
     # Called with either one element to determine next action, or a batch
@@ -71,17 +74,25 @@ class TrafficLightAgent(nn.Module):
         seperated_hidden_2 = self.sigmoid(self.seperated_hidden_2(shared_hidden_1))
         seperated_hidden_3 = self.sigmoid(self.seperated_hidden_3(shared_hidden_1))
         seperated_hidden_4 = self.sigmoid(self.seperated_hidden_4(shared_hidden_1))
+
         q_values_hidden_1 = self.linear_act_hidden_1(self.q_values_hidden_1(seperated_hidden_1))
         q_values_hidden_2 = self.linear_act_hidden_2(self.q_values_hidden_2(seperated_hidden_2))
         q_values_hidden_3 = self.linear_act_hidden_3(self.q_values_hidden_1(seperated_hidden_3))
         q_values_hidden_4 = self.linear_act_hidden_4(self.q_values_hidden_2(seperated_hidden_4))
         
-        
+        selector_hidden_1 = self.selector_hidden_1(phase)
+        selector_hidden_2 = self.selector_hidden_2(phase)
+        selector_hidden_3 = self.selector_hidden_3(phase)
+        selector_hidden_4 = self.selector_hidden_4(phase)
 
-        x = F.relu(self.bn1(self.conv1(x)))
-        x = F.relu(self.bn2(self.conv2(x)))
-        x = F.relu(self.bn3(self.conv3(x)))
-        return self.head(x.view(x.size(0), -1))
+        multiplied_hidden_1 = torch.mul(q_values_hidden_1, selector_hidden_1)
+        multiplied_hidden_2 = torch.mul(q_values_hidden_2, selector_hidden_2)
+        multiplied_hidden_3 = torch.mul(q_values_hidden_3, selector_hidden_3)
+        multiplied_hidden_4 = torch.mul(q_values_hidden_4, selector_hidden_4)
+
+        final_q_values = multiplied_hidden_1 + multiplied_hidden_2 + multiplied_hidden_3 + multiplied_hidden_4
+
+        return final_q_values
 
 resize = T.Compose([T.ToPILImage(),
                     T.Resize(40, interpolation=Image.CUBIC),
