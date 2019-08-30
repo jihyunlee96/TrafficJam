@@ -23,6 +23,32 @@ import shutil
 import json
 
 
+class State(object):
+    # ==========================
+
+    D_NUM_OF_VEHICLES = (12,)
+    D_CUR_PHASE = (1,)
+    D_NEXT_PHASE = (1,)
+    D_TIME_THIS_PHASE = (1,)
+    D_IF_TERMINAL = (1,)
+    D_HISTORICAL_TRAFFIC = (6,)
+
+    # ==========================
+
+    def __init__(self, num_of_vehicles,
+                 cur_phase,
+                 next_phase,
+                 time_this_phase,
+                 if_terminal):
+        self.num_of_vehicles = num_of_vehicles
+        self.cur_phase = cur_phase
+        self.next_phase = next_phase
+        self.time_this_phase = time_this_phase
+
+        self.if_terminal = if_terminal
+
+        self.historical_traffic = None
+
 class Vehicles:
     initial_speed = 5.0
 

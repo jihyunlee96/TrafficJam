@@ -42,38 +42,36 @@ class State(object):
 class Agent(object):
 
     class ParaSet:
-
-        def __init__(self, dic_paras):
-            for key, value in dic_paras.items():
-                setattr(self, key, value)
-
-            if hasattr(self, "STATE_FEATURE"):
-                self.LIST_STATE_FEATURE = []
-                list_state_feature_names = list(self.STATE_FEATURE.keys())
-                list_state_feature_names.sort()
-                for feature_name in list_state_feature_names:
-                    if self.STATE_FEATURE[feature_name]:
-                        self.LIST_STATE_FEATURE.append(feature_name)
+        LEARNING_RATE = 0.001 
+        UPDATE_PERIOD = 300
+        SAMPLE_SIZE = 300
+        SAMPLE_SIZE_PRETRAIN = 3000
+        BATCH_SIZE = 20 
+        EPOCHS = 50 
+        EPOCHS_PRETRAIN = 500
+        SEPARATE_MEMORY = true
+        PRIORITY_SAMPLING = false
+        UPDATE_Q_BAR_FREQ = 5 
+        GAMMA = 0.8 
+        GAMMA_PRETRAIN = 0
+        MAX_MEMORY_LEN = 1000 
+        EPSILON = 0.00
+        PATIENCE = 10
+        PHASE_SELECTOR = true
+        DDQN = false
+        D_DENSE = 20
+        LIST_STATE_FEATURE = ["num_of_vehicles", "cur_phase", "next_phase"]
 
     def __init__(self, num_phases,
                  path_set):
 
         self.path_set = path_set
-        self.para_set = self.load_conf(os.path.join(self.path_set.PATH_TO_CONF, self.path_set.AGENT_CONF))
-        shutil.copy(
-            os.path.join(self.path_set.PATH_TO_CONF, self.path_set.AGENT_CONF),
-            os.path.join(self.path_set.PATH_TO_OUTPUT, self.path_set.AGENT_CONF))
-
+        self.para_set = self.ParaSet()
         self.num_phases = num_phases
         self.state = None
         self.action = None
         self.memory = []
         self.average_reward = None
-
-    def load_conf(self, conf_file):
-
-        dic_paras = json.load(open(conf_file, "r"))
-        return self.ParaSet(dic_paras)
 
     def get_state(self, state, count):
 
