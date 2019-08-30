@@ -28,7 +28,7 @@ class TrafficLightAgent(nn.Module):
     def __init__(self, num_actions):
         super(TrafficLightAgent, self).__init__()
 
-        self.shared_hidden_1 = nn.Linear(18, 20) # activation : Sigmoid
+        self.shared_hidden_1 = nn.Linear(13, 20) # activation : Sigmoid
 
         # Phase Gate - seperated routes by phases
         self.seperated_hidden_1 = nn.Linear(20, 20) # activation : Sigmoid
@@ -57,6 +57,8 @@ class TrafficLightAgent(nn.Module):
     # during optimization. Returns tensor([[left0exp,right0exp]...]).
     def forward(self, car_number, phase):
         # Concat number of cars and current phase id
+        print(car_number)
+        print(phase)
         x = torch.cat((car_number, phase), 0)
 
         # Fully Connected Layer to create Embedded Input
