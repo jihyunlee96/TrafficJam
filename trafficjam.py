@@ -85,7 +85,9 @@ class TrafficLightAgent(nn.Module):
 
         final_q_values = multiplied_hidden_1 + multiplied_hidden_2 + multiplied_hidden_3 + multiplied_hidden_4
 
-        return final_q_values
+        action, q_value = torch.max(final_q_values, 0)
+
+        return action, q_value
 
 class Selector(nn.Module):
     def __init__(self, select, **kwargs):
