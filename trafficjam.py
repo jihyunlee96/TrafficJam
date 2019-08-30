@@ -33,32 +33,51 @@ class TrafficLightAgent(nn.Module):
     def __init__(self, h, w, outputs):
         super(TrafficLightAgent, self).__init__()
 
-        self.shared_hidden_1 = nn.Linear(17, 20) # activation : Sigmoid
+        self.shared_hidden_1 = nn.Linear(18, 20) # activation : Sigmoid
 
         # Phase Gate - seperated routes by phases
         self.seperated_hidden_1 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_1 = nn.Linear(20, number_of_actions) #  activation : Linear (?)
-        self.selector_1 = Selector()
-        self.multiply
+        self.linear_act_hidden_1 = nn.linear(number_of_actions, number_of_actions)
 
         self.seperated_hidden_2 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_2 = nn.Linear(20, number_of_actions) #  activation : Linear (?)
-        
+        self.linear_act_hidden_2 = nn.linear(number_of_actions, number_of_actions)
 
-        
+        self.seperated_hidden_3 = nn.Linear(20, 20) # activation : Sigmoid
+        self.q_values_hidden_3 = nn.Linear(20, number_of_actions) #  activation : Linear (?)
+        self.linear_act_hidden_3 = nn.linear(number_of_actions, number_of_actions)
 
-        # Number of Linear input connections depends on output of conv2d layers
-        # and therefore the input image size, so compute it.
-        def conv2d_size_out(size, kernel_size = 5, stride = 2):
-            return (size - (kernel_size - 1) - 1) // stride  + 1
-        convw = conv2d_size_out(conv2d_size_out(conv2d_size_out(w)))
-        convh = conv2d_size_out(conv2d_size_out(conv2d_size_out(h)))
-        linear_input_size = convw * convh * 32
-        self.head = nn.Linear(linear_input_size, outputs)
+        self.seperated_hidden_4 = nn.Linear(20, 20) # activation : Sigmoid
+        self.q_values_hidden_4 = nn.Linear(20, number_of_actions) #  activation : Linear (?)
+        self.linear_act_hidden_4 = nn.linear(number_of_actions, number_of_actions)
+
+        self.sigmoid = nn.Sigmoid()
+        
+        self.selector_1 = Selector()
+        self.multiply
 
     # Called with either one element to determine next action, or a batch
     # during optimization. Returns tensor([[left0exp,right0exp]...]).
-    def forward(self, x):
+    def forward(self, car_number, phase):
+        # Concat number of cars and current phase id
+        x = torch.cat((car_number, phase), 0)
+
+        # Fully Connected Layer to create Embedded Input
+        shared_hidden_1 = self.sigmoid(self.shared_hidden_1(x))
+
+        # 4 different hidden layers. Each of them take care of one phase
+        seperated_hidden_1 = self.sigmoid(self.seperated_hidden_1(shared_hidden_1))
+        seperated_hidden_2 = self.sigmoid(self.seperated_hidden_2(shared_hidden_1))
+        seperated_hidden_3 = self.sigmoid(self.seperated_hidden_3(shared_hidden_1))
+        seperated_hidden_4 = self.sigmoid(self.seperated_hidden_4(shared_hidden_1))
+        q_values_hidden_1 = self.linear_act_hidden_1(self.q_values_hidden_1(seperated_hidden_1))
+        q_values_hidden_2 = self.linear_act_hidden_2(self.q_values_hidden_2(seperated_hidden_2))
+        q_values_hidden_3 = self.linear_act_hidden_3(self.q_values_hidden_1(seperated_hidden_3))
+        q_values_hidden_4 = self.linear_act_hidden_4(self.q_values_hidden_2(seperated_hidden_4))
+        
+        
+
         x = F.relu(self.bn1(self.conv1(x)))
         x = F.relu(self.bn2(self.conv2(x)))
         x = F.relu(self.bn3(self.conv3(x)))
@@ -99,20 +118,6 @@ def get_screen():
     # Resize, and add a batch dimension (BCHW)
     return resize(screen).unsqueeze(0).to(device)
 
-
-env.reset()
-plt.figure()
-plt.imshow(get_screen().cpu().squeeze(0).permute(1, 2, 0).numpy(),
-           interpolation='none')
-plt.title('Example extracted screen')
-plt.show()
-
-BATCH_SIZE = 128
-GAMMA = 0.999
-EPS_START = 0.9
-EPS_END = 0.05
-EPS_DECAY = 200
-TARGET_UPDATE = 10
 
 # Get screen size so that we can initialize layers correctly based on shape
 # returned from AI gym. Typical dimensions at this point are close to 3x40x90
@@ -217,45 +222,12 @@ def optimize_model():
         param.grad.data.clamp_(-1, 1)
     optimizer.step()
 
-num_episodes = 50
-for i_episode in range(num_episodes):
-    # Initialize the environment and state
-    env.reset()
-    last_screen = get_screen()
-    current_screen = get_screen()
-    state = current_screen - last_screen
-    for t in count():
-        # Select and perform an action
-        action = select_action(state)
-        _, reward, done, _ = env.step(action.item())
-        reward = torch.tensor([reward], device=device)
+class Selector(nn.Module):
+    def __init__(self, select, **kwargs):
+        super(Selector, self).__init__(**kwargs)
+        self.select = select
 
-        # Observe new state
-        last_screen = current_screen
-        current_screen = get_screen()
-        if not done:
-            next_state = current_screen - last_screen
-        else:
-            next_state = None
+    def forward(self, x):
+        x = torch.eq(x, self.select).type(torch.FloatTensor)
+        return x
 
-        # Store the transition in memory
-        memory.push(state, action, next_state, reward)
-
-        # Move to the next state
-        state = next_state
-
-        # Perform one step of the optimization (on the target network)
-        optimize_model()
-        if done:
-            episode_durations.append(t + 1)
-            plot_durations()
-            break
-    # Update the target network, copying all weights and biases in DQN
-    if i_episode % TARGET_UPDATE == 0:
-        target_net.load_state_dict(policy_net.state_dict())
-
-print('Complete')
-env.render()
-env.close()
-plt.ioff()
-plt.show()
