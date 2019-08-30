@@ -49,16 +49,16 @@ class Agent(object):
         BATCH_SIZE = 20 
         EPOCHS = 50 
         EPOCHS_PRETRAIN = 500
-        SEPARATE_MEMORY = true
-        PRIORITY_SAMPLING = false
+        SEPARATE_MEMORY = True
+        PRIORITY_SAMPLING = False
         UPDATE_Q_BAR_FREQ = 5 
         GAMMA = 0.8 
         GAMMA_PRETRAIN = 0
         MAX_MEMORY_LEN = 1000 
         EPSILON = 0.00
         PATIENCE = 10
-        PHASE_SELECTOR = true
-        DDQN = false
+        PHASE_SELECTOR = True
+        DDQN = False
         D_DENSE = 20
         LIST_STATE_FEATURE = ["num_of_vehicles", "cur_phase", "next_phase"]
 
