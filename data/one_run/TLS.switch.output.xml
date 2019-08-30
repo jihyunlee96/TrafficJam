@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 08/31/19 01:26:23 by Eclipse SUMO Version 1.3.1
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="C:\Users\User\gitdir\TrafficJam/data/one_run/cross.net.xml"/>
+        <route-files value="C:\Users\User\gitdir\TrafficJam/data/one_run/cross.2phases_rou1_switch_rou0.xml"/>
+        <additional-files value="C:\Users\User\gitdir\TrafficJam/data/one_run/cross.tls.switch.xml,C:\Users\User\gitdir\TrafficJam/data/one_run/cross.car.type.xml"/>
+    </input>
+
+    <processing>
+        <ignore-junction-blocker value="1"/>
+        <time-to-teleport value="-1"/>
+    </processing>
+
+    <report>
+        <verbose value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+    <traci_server>
+        <remote-port value="53715"/>
+    </traci_server>
+
+</configuration>
+-->
+
+<tlsStates xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tlsstates_file.xsd">
+    <tlsState time="0.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="1.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="2.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="3.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="4.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="5.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="6.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="7.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="8.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="9.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="10.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="11.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="12.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="13.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="14.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="15.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="16.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="17.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="18.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="19.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="20.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="21.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="22.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="23.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+    <tlsState time="24.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
+</tlsStates>
