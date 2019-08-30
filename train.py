@@ -20,9 +20,11 @@ while current_time < RUN_COUNT:
 
     # Epsilon Greedy Algorithm to choose either model's action or random action 추가하기
 
-    action, q_value = model(car_number, phase_id)
+    action, q_values = model(car_number, phase_id)
     reward = sumo_agent.take_action(action)
     next_state = sumo_agent.get_state()
+
+    print("action %d \t reward %f \t q_values %s" % (int(action[0]), reward, repr(q_values)))
 
     memory[phase_id][action].append(torch.cat(car_number, phase_id), action, reward, next_state)
 
