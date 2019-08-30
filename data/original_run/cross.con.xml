@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<connections> 
+    <connection from="-gneE13" to="gneE17" fromLane="0" toLane="0" via=":gneJ10_0_0" dir="r" state="m"/>
+    <connection from="-gneE13" to="gneE16" fromLane="0" toLane="0" via=":gneJ10_1_0" dir="s" state="m"/>
+    <connection from="-gneE13" to="gneE16" fromLane="1" toLane="1" via=":gneJ10_1_1" dir="s" state="m"/>
+    <connection from="-gneE13" to="gneE15" fromLane="1" toLane="2" via=":gneJ10_3_0" dir="l" state="m"/>
+    <connection from="-gneE13" to="gneE15" fromLane="2" toLane="3" via=":gneJ10_4_0" dir="l" state="m"/>
+    <connection from="-gneE15" to="gneE13" fromLane="0" toLane="0" via=":gneJ10_5_0" dir="r" state="M"/>
+    <connection from="-gneE15" to="gneE17" fromLane="0" toLane="0" via=":gneJ10_6_0" dir="s" state="M"/>
+    <connection from="-gneE15" to="gneE17" fromLane="1" toLane="1" via=":gneJ10_6_1" dir="s" state="M"/>
+    <connection from="-gneE15" to="gneE16" fromLane="2" toLane="0" via=":gneJ10_8_0" dir="l" state="m"/>
+    <connection from="-gneE15" to="gneE16" fromLane="3" toLane="1" via=":gneJ10_9_0" dir="l" state="m"/>
+    <connection from="-gneE16" to="gneE15" fromLane="0" toLane="0" via=":gneJ10_10_0" dir="r" state="M"/>
+    <connection from="-gneE16" to="gneE13" fromLane="0" toLane="0" via=":gneJ10_11_0" dir="s" state="m"/>
+    <connection from="-gneE16" to="gneE13" fromLane="1" toLane="1" via=":gneJ10_11_1" dir="s" state="m"/>
+    <connection from="-gneE16" to="gneE17" fromLane="2" toLane="2" via=":gneJ10_13_0" dir="l" state="m"/>
+    <connection from="-gneE17" to="gneE16" fromLane="0" toLane="0" via=":gneJ10_14_0" dir="r" state="M"/>
+    <connection from="-gneE17" to="gneE15" fromLane="1" toLane="1" via=":gneJ10_15_0" dir="s" state="M"/>
+    <connection from="-gneE17" to="gneE13" fromLane="2" toLane="0" via=":gneJ10_16_0" dir="l" state="m"/>
+    <connection from="-gneE17" to="gneE13" fromLane="3" toLane="1" via=":gneJ10_17_0" dir="l" state="m"/>
+
+    <connection from=":gneJ10_0" to="gneE17" fromLane="0" toLane="0" dir="r" state="M"/>
+    <connection from=":gneJ10_1" to="gneE16" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":gneJ10_1" to="gneE16" fromLane="1" toLane="1" dir="s" state="M"/>
+    <connection from=":gneJ10_3" to="gneE15" fromLane="0" toLane="2" dir="l" state="M"/>
+    <connection from=":gneJ10_4" to="gneE15" fromLane="0" toLane="3" dir="l" state="M"/>
+    <connection from=":gneJ10_5" to="gneE13" fromLane="0" toLane="0" dir="r" state="M"/>
+    <connection from=":gneJ10_6" to="gneE17" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":gneJ10_6" to="gneE17" fromLane="1" toLane="1" dir="s" state="M"/>
+    <connection from=":gneJ10_8" to="gneE16" fromLane="0" toLane="0" via=":gneJ10_18_0" dir="l" state="m"/>
+    <connection from=":gneJ10_18" to="gneE16" fromLane="0" toLane="0" dir="l" state="M"/>
+    <connection from=":gneJ10_9" to="gneE16" fromLane="0" toLane="1" via=":gneJ10_19_0" dir="l" state="m"/>
+    <connection from=":gneJ10_19" to="gneE16" fromLane="0" toLane="1" dir="l" state="M"/>
+    <connection from=":gneJ10_10" to="gneE15" fromLane="0" toLane="0" dir="r" state="M"/>
+    <connection from=":gneJ10_11" to="gneE13" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":gneJ10_11" to="gneE13" fromLane="1" toLane="1" dir="s" state="M"/>
+    <connection from=":gneJ10_13" to="gneE17" fromLane="0" toLane="2" dir="l" state="M"/>
+    <connection from=":gneJ10_14" to="gneE16" fromLane="0" toLane="0" dir="r" state="M"/>
+    <connection from=":gneJ10_15" to="gneE15" fromLane="0" toLane="1" dir="s" state="M"/>
+    <connection from=":gneJ10_16" to="gneE13" fromLane="0" toLane="0" via=":gneJ10_20_0" dir="l" state="m"/>
+    <connection from=":gneJ10_20" to="gneE13" fromLane="0" toLane="0" dir="l" state="M"/>
+    <connection from=":gneJ10_17" to="gneE13" fromLane="0" toLane="1" via=":gneJ10_21_0" dir="l" state="m"/>
+    <connection from=":gneJ10_21" to="gneE13" fromLane="0" toLane="1" dir="l" state="M"/>
+</connections>

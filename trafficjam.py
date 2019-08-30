@@ -55,7 +55,7 @@ class TrafficLightAgent(nn.Module):
         
     # Called with either one element to determine next action, or a batch
     # during optimization. Returns tensor([[left0exp,right0exp]...]).
-    def forward(self, x):
+    def forward(self, x, phase):
 
         # Fully Connected Layer to create Embedded Input
         shared_hidden_1 = self.sigmoid(self.shared_hidden_1(x))

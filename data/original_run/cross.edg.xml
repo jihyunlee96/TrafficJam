@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edges>
+
+    <edge id=":gneJ10_0" function="internal"/>
+    <edge id=":gneJ10_1" function="internal"/>
+    <edge id=":gneJ10_3" function="internal"/>
+    <edge id=":gneJ10_4" function="internal"/>
+    <edge id=":gneJ10_5" function="internal"/>
+    <edge id=":gneJ10_6" function="internal"/>
+    <edge id=":gneJ10_8" function="internal"/>
+    <edge id=":gneJ10_9" function="internal"/>
+    <edge id=":gneJ10_18" function="internal"/>
+    <edge id=":gneJ10_19" function="internal"/>
+    <edge id=":gneJ10_10" function="internal"/>
+    <edge id=":gneJ10_11" function="internal"/>
+    <edge id=":gneJ10_13" function="internal"/>
+    <edge id=":gneJ10_14" function="internal"/>
+    <edge id=":gneJ10_15" function="internal"/>
+    <edge id=":gneJ10_16" function="internal"/>
+    <edge id=":gneJ10_17" function="internal"/>
+    <edge id=":gneJ10_20" function="internal"/>
+    <edge id=":gneJ10_21" function="internal"/>
+    <edge id="-gneE13" from="gneJ6" to="gneJ10" priority="-1"/>
+    <edge id="-gneE15" from="gneJ1" to="gneJ10" priority="-1"/>
+    <edge id="-gneE16" from="gneJ7" to="gneJ10" priority="-1"/>
+    <edge id="-gneE17" from="gneJ5" to="gneJ10" priority="-1"/>
+    <edge id="gneE13" from="gneJ10" to="gneJ6" priority="-1"/>
+    <edge id="gneE15" from="gneJ10" to="gneJ1" priority="-1"/>
+    <edge id="gneE16" from="gneJ10" to="gneJ7" priority="-1"/>
+    <edge id="gneE17" from="gneJ10" to="gneJ5" priority="-1"/>
+
+</edges>
