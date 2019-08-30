@@ -339,38 +339,22 @@ def log_rewards(vehicle_dict, action, rewards_info_dict, file_name, timestamp,re
     fp.close()
     rewards_detail_dict_list.append(reward_detail_dict)
 
-
 def get_rewards_from_sumo(vehicle_dict, action, rewards_info_dict,
                           listLanes=['edge1-0_0','edge1-0_1','edge1-0_2','edge2-0_0','edge2-0_1','edge2-0_2',
                                  'edge3-0_0','edge3-0_1','edge3-0_2','edge4-0_0','edge4-0_1','edge4-0_2'],):
     reward = 0
     import copy
     reward_detail_dict = copy.deepcopy(rewards_info_dict)
-
-    vehicle_id_entering_list = get_vehicle_id_entering()
-
     reward_detail_dict['queue_length'].append(get_overall_queue_length(listLanes))
-
-    vehicle_id_list = traci.vehicle.getIDList()
-    reward_detail_dict['num_of_vehicles_in_system'] = [False, 0, len(vehicle_id_list)]
-
-    reward_detail_dict['num_of_vehicles_at_entering'] = [False, 0, len(vehicle_id_entering_list)]
-
-
-    vehicle_id_leaving = get_vehicle_id_leaving(vehicle_dict)
-
-    # reward_detail_dict['num_of_vehicles_left'].append(len(vehicle_id_leaving))
-    # reward_detail_dict['duration_of_vehicles_left'].append(get_travel_time_duration(vehicle_dict, vehicle_id_leaving))
-    return -reward_detail_dict['queue_length'][2], reward_detail_dict
+    reward = reward_detail_dict['queue_length'][2]
+    
+    return -reward, reward_detail_dict
 
 def get_rewards_from_dict_list(rewards_detail_dict_list):
     reward = 0
     for i in range(len(rewards_detail_dict_list)):
-        for k, v in rewards_detail_dict_list[i].items():
-            if v[0]:  # True or False
-                reward += v[1] * v[2]
-    reward = restrict_reward(reward)
-    return reward
+        reward += rewards_detail_dict_list[i]['queue_length'][2]
+    return -reward
 
 def get_overall_queue_length(listLanes):
     overall_queue_length = 0

@@ -29,7 +29,7 @@ class SumoAgent:
         MIN_PHASE_TIME = [0, 0]
         MIN_ACTION_TIME = 5
         REWARDS_INFO_DICT = {
-                "queue_length" : [True, -1],
+                'queue_length' : [True, -1],
         }        
     
     def __init__(self, sumo_cmd_str):
@@ -47,7 +47,7 @@ class SumoAgent:
         self.f_log_rewards = os.path.join('./data', 'log_rewards.txt')
         if not os.path.exists(self.f_log_rewards):
             f = open(self.f_log_rewards, 'w')
-            list_reward_keys = np.sort(list(self.ParaSet.REWARDS_INFO_DICT.keys()) + ['num_of_vehicles_in_system', 'num_of_vehicles_at_entering'])
+            list_reward_keys = np.sort(list(self.ParaSet.REWARDS_INFO_DICT.keys()))
             head_str = "count, action," + ",".join(list_reward_keys) + '\n'
             f.write(head_str)
             f.close()
@@ -87,8 +87,8 @@ class SumoAgent:
                                                                                f_log_rewards=self.f_log_rewards,
                                                                                rewards_detail_dict_list=rewards_detail_dict_list)  # run 1s SUMO
 
-        #reward, reward_detail_dict = self.cal_reward(action)
-        reward = self.cal_reward_from_list(rewards_detail_dict_list, action)
+        reward = self.cal_reward_from_list(rewards_detail_dict_list)
+
         self.update_state()
 
         return reward, action
@@ -108,12 +108,11 @@ class SumoAgent:
     
     def cal_reward(self, action):
         # get directly from sumo
-        reward, reward_detail_dict = map_computor.get_rewards_from_sumo(self.dic_vehicles, action, self.ParaSet.REWARDS_INFO_DICT)
-        return reward*(1-0.8), reward_detail_dict
+        reward, reward_detail_dict = map_computor.get_rewards_from_sumo(self.dic_vehicles, action, self.para_set.REWARDS_INFO_DICT)
+        return reward, reward_detail_dict
 
-    def cal_reward_from_list(self, reward_detail_dict_list, action):
-        reward, reward_detail_dict = map_computor.get_rewards_from_sumo(self.dic_vehicles, action, self.ParaSet.REWARDS_INFO_DICT)
-        # reward = map_computor.get_rewards_from_dict_list(reward_detail_dict_list)
+    def cal_reward_from_list(self, reward_detail_dict_list):
+        reward = map_computor.get_rewards_from_dict_list(reward_detail_dict_list)
         return reward
 
 
