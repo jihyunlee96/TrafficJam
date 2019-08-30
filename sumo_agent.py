@@ -64,17 +64,18 @@ class SumoAgent:
     def get_current_phase(self):
         return self.current_phase
 
-    def take_action(self, action):
+    def take_action(self, action, phase):
         current_phase_number = self.get_current_phase()
         rewards_detail_dict_list = []
         # 현재 신호가 최소 지속 시간을 넘지 않았다면 action은 유지
         if (self.current_phase_duration < self.ParaSet.MIN_PHASE_TIME[current_phase_number]):
-            action = 0
+            action = phase
         # MIN_ACTION_TIME 까지 돌아라(5까지)
         for i in range(self.ParaSet.MIN_ACTION_TIME):
             # action time 동안에 
             action_in_second = 0
             current_phase_number = self.get_current_phase()
+            #### 이 부분 바꿔야함!###
             # a가 바꾸는 거라면 일단 첫 액션은 바꾸는 걸로 해라
             if action == 1 and i == 0:
                 action_in_second = 1

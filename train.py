@@ -12,10 +12,8 @@ import torch.optim as optim
 class ParaSet:
         
     RUN_COUNTS = 72000
-    RUN_COUNTS_PRETRAIN = 10000
     BASE_RATIO = [10, 10]
     TRAFFIC_FILE = ["cross.2phases_rou1_switch_rou0.xml"]
-    TRAFFIC_FILE_PRETRAIN = ["cross.2phases_rou1_switch_rou0.xml"]
     MODEL_NAME = "TrafficJAM"
 
 def build_memory(num_phases):
@@ -46,6 +44,14 @@ def set_traffic_file(self):
             os.path.join("./data", file_name),
             os.path.join("./data", file_name))
 
+def _unison_shuffled_copies(states, target, sample_weight):
+    p = np.random.permutation(len(target))
+    new_states = []
+    for state in states:
+        assert len(state) == len(target)
+        new_states.append(state[p])
+    return new_states, target[p], sample_weight[p]
+
 RUN_COUNT = 216000
 GAMMA = 0.8 
 
@@ -62,8 +68,11 @@ current_time = sumo_agent.get_current_time()
 
 memory = build_memory(4)
 
-model = TrafficLightAgent(4)
-optimizer = optim.RMSprop(model.parameters())
+policy_net = TrafficLightAgent(2)
+target_net = TrafficLightAgent(2)
+target_net.load_state_dict(policy_net.state_dict())
+
+optimizer = optim.RMSprop(policy_net.parameters())
 
 while current_time < RUN_COUNT:
     car_number, phase_id = sumo_agent.get_state()
@@ -71,33 +80,35 @@ while current_time < RUN_COUNT:
     car_number = car_number.type(dtype=torch.FloatTensor)
     phase_id = torch.Tensor([phase_id])
 
-    # Epsilon Greedy Algorithm to choose either model's action or random action 추가하기
+    # Epsilon Greedy Algorithm to choose either policy_net's action or random action 추가하기
 
-    action, q_values = model(car_number, phase_id)
-    print(action)
-    reward, action = sumo_agent.take_action(action)
+    input_feature = torch.cat((car_number, phase_id), 0)
+    action, q_values = policy_net(input_feature)
+    reward, action = sumo_agent.take_action(action, phase_id)
     next_state = sumo_agent.get_state()
 
     print("action %d \t reward %f \t q_values %s" % (int(action), reward, repr(q_values)))
 
-    memory[phase_id][action].append(torch.cat(car_number, phase_id), action, reward, next_state)
+    memory[int(phase_id)][action].append([torch.cat((car_number, phase_id), 0), action, reward, next_state])
 
     current_time = sumo_agent.get_current_time()
 
-    # update model
+    # update policy_net
     # calculate average reward
     average_reward = np.zeros((4, 4))
-    len_memory = len(memory[phase_i][action_i])
     for phase_i in range(4):
         for action_i in range(4):
+            len_memory = len(memory[phase_i][action_i])
             if len_memory > 0:
                 list_reward = []
                 for i in range(len_memory):
                     _state, _action, _reward, _ = memory[phase_i][action_i][i]
-                    list_reward.append(reward)
+                    list_reward.append(_reward)
                 average_reward[phase_i][action_i]=np.average(list_reward)
 
-    Y = []
+    sampled_states = []
+    sampled_target = []
+    len_memory = len(memory)
     # get sample
     for phase_i in range(4):
         for action_i in range(4):
@@ -115,11 +126,30 @@ while current_time < RUN_COUNT:
                 total_reward = reward + GAMMA * next_estimated_reward
                 target = np.copy(np.array([average_reward[phase_id]]))
                 target[0][action] = total_reward
-                Y.append(target[0])
+                sampled_target.append(target[0])
+                sampled_states.append(state)
 
-    Y = np.array(Y)
+    sampled_states = np.array(sampled_states)
+    sampled_target = np.array(sampled_target)
+    sampled_weight = np.ones(sampled_target)
+    sampled_states, sampled_target = unison_shuffled_copies(sampled_states, sampled_target, sampled_weight)
+
+    loss = nn.MSELoss()
 
     # Train Network
+    for epoch in range(50):
+        for i in range(len(sampled_states)):
+            action, q_values = policy_net(sampled_states)
 
+            ############################################
+            # 이 부분을 어떻게 하면 될 지 모르겠음 ㅠㅠ#
+            ############################################
+
+            output = loss(input, target)
+            optimizer.zero_grad()
+            output.backward()
+            for param in policy_net.parameters():
+                param.grad.data.clamp_(-1, 1)
+            optimizer.step()
 
 
