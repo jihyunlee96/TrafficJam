@@ -34,22 +34,22 @@ class TrafficLightAgent(nn.Module):
         self.seperated_hidden_1 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_1 = nn.Linear(20, num_actions) #  activation : Linear (?)
         self.linear_act_hidden_1 = nn.Linear(num_actions, num_actions)
-        self.selector_hidden_1 = Selector(torch.Tensor([1]))
+        self.selector_hidden_1 = Selector(torch.Tensor([0]))
 
         self.seperated_hidden_2 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_2 = nn.Linear(20, num_actions) #  activation : Linear (?)
         self.linear_act_hidden_2 = nn.Linear(num_actions, num_actions)
-        self.selector_hidden_2 = Selector(torch.Tensor([2]))
+        self.selector_hidden_2 = Selector(torch.Tensor([1]))
 
         self.seperated_hidden_3 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_3 = nn.Linear(20, num_actions) #  activation : Linear (?)
         self.linear_act_hidden_3 = nn.Linear(num_actions, num_actions)
-        self.selector_hidden_3 = Selector(torch.Tensor([3]))
+        self.selector_hidden_3 = Selector(torch.Tensor([2]))
 
         self.seperated_hidden_4 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_4 = nn.Linear(20, num_actions) #  activation : Linear (?)
         self.linear_act_hidden_4 = nn.Linear(num_actions, num_actions)
-        self.selector_hidden_4 = Selector(torch.Tensor([4]))
+        self.selector_hidden_4 = Selector(torch.Tensor([3]))
 
         self.sigmoid = nn.Sigmoid()
         
@@ -57,8 +57,6 @@ class TrafficLightAgent(nn.Module):
     # during optimization. Returns tensor([[left0exp,right0exp]...]).
     def forward(self, car_number, phase):
         # Concat number of cars and current phase id
-        print(car_number)
-        print(phase)
         x = torch.cat((car_number, phase), 0)
 
         # Fully Connected Layer to create Embedded Input
@@ -87,9 +85,9 @@ class TrafficLightAgent(nn.Module):
 
         final_q_values = multiplied_hidden_1 + multiplied_hidden_2 + multiplied_hidden_3 + multiplied_hidden_4
 
-        action, q_value = torch.max(final_q_values, 0)
+        q_value, action = torch.max(final_q_values, 0)
 
-        return action, q_value
+        return action, final_q_values
 
 class Selector(nn.Module):
     def __init__(self, select, **kwargs):

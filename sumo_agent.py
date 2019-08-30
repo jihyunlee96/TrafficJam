@@ -22,20 +22,6 @@ import shutil
 import json
 from agent import State
 
-class Vehicles:
-    initial_speed = 5.0
-
-    def __init__(self):
-        # add what ever you need to maintain
-        self.id = None
-        self.speed = None
-        self.wait_time = None
-        self.stop_count = None
-        self.enter_time = None
-        self.has_read = False
-        self.first_stop_time = -1
-        self.entering = True
-
 
 class SumoAgent:
     
@@ -57,6 +43,14 @@ class SumoAgent:
         self.current_phase = 0
         self.current_phase_duration = 0
         self.update_state()
+
+        self.f_log_rewards = os.path.join('./data', 'log_rewards.txt')
+        if not os.path.exists(self.f_log_rewards):
+            f = open(self.f_log_rewards, 'w')
+            list_reward_keys = np.sort(list(self.ParaSet.REWARDS_INFO_DICT.keys()) + ['num_of_vehicles_in_system', 'num_of_vehicles_at_entering'])
+            head_str = "count, action," + ",".join(list_reward_keys) + '\n'
+            f.write(head_str)
+            f.close()
 
     def end_sumo(self):
         map_computor.end_sumo()
@@ -90,10 +84,11 @@ class SumoAgent:
                                                                                current_phase_duration=self.current_phase_duration,
                                                                                vehicle_dict=self.dic_vehicles,
                                                                                rewards_info_dict=self.ParaSet.REWARDS_INFO_DICT,
+                                                                               f_log_rewards=self.f_log_rewards,
                                                                                rewards_detail_dict_list=rewards_detail_dict_list)  # run 1s SUMO
 
         #reward, reward_detail_dict = self.cal_reward(action)
-        reward = self.cal_reward_from_list(rewards_detail_dict_list)
+        reward = self.cal_reward_from_list(rewards_detail_dict_list, action)
         self.update_state()
 
         return reward, action
@@ -116,7 +111,7 @@ class SumoAgent:
         reward, reward_detail_dict = map_computor.get_rewards_from_sumo(self.dic_vehicles, action, self.ParaSet.REWARDS_INFO_DICT)
         return reward*(1-0.8), reward_detail_dict
 
-    def cal_reward_from_list(self, reward_detail_dict_list):
+    def cal_reward_from_list(self, reward_detail_dict_list, action):
         reward, reward_detail_dict = map_computor.get_rewards_from_sumo(self.dic_vehicles, action, self.ParaSet.REWARDS_INFO_DICT)
         # reward = map_computor.get_rewards_from_dict_list(reward_detail_dict_list)
         return reward

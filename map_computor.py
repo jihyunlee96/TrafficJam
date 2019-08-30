@@ -17,6 +17,20 @@ import sys
 import xml.etree.ElementTree as ET
 from sys import platform
 
+class Vehicles:
+    initial_speed = 5.0
+
+    def __init__(self):
+        # add what ever you need to maintain
+        self.id = None
+        self.speed = None
+        self.wait_time = None
+        self.stop_count = None
+        self.enter_time = None
+        self.has_read = False
+        self.first_stop_time = -1
+        self.entering = True
+
 ###### Please Specify the location of your traci module
 
 if platform == "linux" or platform == "linux2":# this is linux
@@ -242,7 +256,7 @@ def changeTrafficLight_7(current_phase=0):  # [WNG_ESG_WSG_ENG_NWG_SEG]
     # phases=["WNG_ESG_WSG_ENG_NWG_SEG","EWG_WEG_WSG_ENG_NWG_SEG","NSG_NEG_SNG_SWG_WSG_ENG_NWG_SEG"]
     next_phase = (current_phase + 1) % len(controlSignal)
     next_phase_time_eclipsed = 0
-    traci.trafficlights.setRedYellowGreenState(node_light_7, controlSignal[next_phase])
+    traci.trafficlight.setRedYellowGreenState(node_light_7, controlSignal[next_phase])
     return next_phase, next_phase_time_eclipsed
 
 
@@ -345,8 +359,8 @@ def get_rewards_from_sumo(vehicle_dict, action, rewards_info_dict,
 
     vehicle_id_leaving = get_vehicle_id_leaving(vehicle_dict)
 
-    reward_detail_dict['num_of_vehicles_left'].append(len(vehicle_id_leaving))
-    reward_detail_dict['duration_of_vehicles_left'].append(get_travel_time_duration(vehicle_dict, vehicle_id_leaving))
+    # reward_detail_dict['num_of_vehicles_left'].append(len(vehicle_id_leaving))
+    # reward_detail_dict['duration_of_vehicles_left'].append(get_travel_time_duration(vehicle_dict, vehicle_id_leaving))
     return -reward_detail_dict['queue_length'][2], reward_detail_dict
 
 def get_rewards_from_dict_list(rewards_detail_dict_list):
@@ -524,7 +538,7 @@ def set_yellow(dic_vehicles,rewards_info_dict,f_log_rewards,rewards_detail_dict_
     Yellow = "yyyyyyyyyyyyyyyy"
     for i in range(3):
         timestamp = traci.simulation.getCurrentTime() / 1000
-        traci.trafficlights.setRedYellowGreenState(node_id, Yellow)
+        traci.trafficlight.setRedYellowGreenState(node_id, Yellow)
         traci.simulationStep()
         log_rewards(dic_vehicles, 0, rewards_info_dict, f_log_rewards, timestamp, rewards_detail_dict_list)
         update_vehicles_state(dic_vehicles)
@@ -533,7 +547,7 @@ def set_all_red(dic_vehicles,rewards_info_dict,f_log_rewards,rewards_detail_dict
     Red = "rrrrrrrrrrrrrrrr"
     for i in range(3):
         timestamp = traci.simulation.getCurrentTime()/1000
-        traci.trafficlights.setRedYellowGreenState(node_id, Red)
+        traci.trafficlight.setRedYellowGreenState(node_id, Red)
         traci.simulationStep()
         log_rewards(dic_vehicles, 0, rewards_info_dict, f_log_rewards, timestamp,rewards_detail_dict_list)
         update_vehicles_state(dic_vehicles)

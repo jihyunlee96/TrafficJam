@@ -1,10 +1,9 @@
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+<configuration>
 
     <input>
         <net-file value="cross.net.xml" />
-        <additional-files value="cross.tls.switch.xml, cross.car.type.xml" />
 
-    <route-files value="cross.2phases_rou1_switch_rou0.xml" /></input>
+    <route-files value="cross.rou.xml" /></input>
 
     <processing>
         <time-to-teleport value="-1" />
