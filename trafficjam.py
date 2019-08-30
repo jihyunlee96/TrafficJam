@@ -32,23 +32,23 @@ class TrafficLightAgent(nn.Module):
 
         # Phase Gate - seperated routes by phases
         self.seperated_hidden_1 = nn.Linear(20, 20) # activation : Sigmoid
-        self.q_values_hidden_1 = nn.Linear(20, number_of_actions) #  activation : Linear (?)
-        self.linear_act_hidden_1 = nn.linear(number_of_actions, number_of_actions)
+        self.q_values_hidden_1 = nn.Linear(20, 4) #  activation : Linear (?)
+        self.linear_act_hidden_1 = nn.linear(4, 4)
         self.selector_hidden_1 = Selector(torch.Tensor([0]))
 
         self.seperated_hidden_2 = nn.Linear(20, 20) # activation : Sigmoid
-        self.q_values_hidden_2 = nn.Linear(20, number_of_actions) #  activation : Linear (?)
-        self.linear_act_hidden_2 = nn.linear(number_of_actions, number_of_actions)
+        self.q_values_hidden_2 = nn.Linear(20, 4) #  activation : Linear (?)
+        self.linear_act_hidden_2 = nn.linear(4, 4)
         self.selector_hidden_2 = Selector(torch.Tensor([1]))
 
         self.seperated_hidden_3 = nn.Linear(20, 20) # activation : Sigmoid
-        self.q_values_hidden_3 = nn.Linear(20, number_of_actions) #  activation : Linear (?)
-        self.linear_act_hidden_3 = nn.linear(number_of_actions, number_of_actions)
+        self.q_values_hidden_3 = nn.Linear(20, 4) #  activation : Linear (?)
+        self.linear_act_hidden_3 = nn.linear(4, 4)
         self.selector_hidden_3 = Selector(torch.Tensor([2]))
 
         self.seperated_hidden_4 = nn.Linear(20, 20) # activation : Sigmoid
-        self.q_values_hidden_4 = nn.Linear(20, number_of_actions) #  activation : Linear (?)
-        self.linear_act_hidden_4 = nn.linear(number_of_actions, number_of_actions)
+        self.q_values_hidden_4 = nn.Linear(20, 4) #  activation : Linear (?)
+        self.linear_act_hidden_4 = nn.linear(4, 4)
         self.selector_hidden_4 = Selector(torch.Tensor([3]))
 
         self.sigmoid = nn.Sigmoid()
