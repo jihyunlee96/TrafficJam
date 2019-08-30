@@ -1,8 +1,18 @@
 import torch
 import numpy as np
 import random
-
+import xml.etree.ElementTree as ET
 from sumo_agent import SumoAgent
+
+class ParaSet:
+        
+    RUN_COUNTS = 72000
+    RUN_COUNTS_PRETRAIN = 10000
+    BASE_RATIO = [10, 10]
+    TRAFFIC_FILE = ["cross.2phases_rou1_switch_rou0.xml"]
+    TRAFFIC_FILE_PRETRAIN = ["cross.2phases_rou1_switch_rou0.xml"]
+    MODEL_NAME = "TrafficJAM"
+
 
 RUN_COUNT = 216000
 GAMMA = 0.8 
@@ -86,20 +96,11 @@ def _set_traffic_file(sumo_config_file_tmp_name, sumo_config_file_output_name, l
     sumo_cfg.write(sumo_config_file_output_name)
 
 def set_traffic_file(self):
-
-    _set_traffic_file(
-        os.path.join("./data", "cross_pretrain.sumocfg"),
-        os.path.join("./data", "cross_pretrain.sumocfg"),
-        para_set.TRAFFIC_FILE_PRETRAIN)
     _set_traffic_file(
         os.path.join("./data", "cross.sumocfg"),
         os.path.join("./data", "cross.sumocfg"),
-        para_set.TRAFFIC_FILE)
-    for file_name in path_set.TRAFFIC_FILE_PRETRAIN:
-        shutil.copy(
-                os.path.join("./data", file_name),
-                os.path.join("./data", file_name))
-    for file_name in path_set.TRAFFIC_FILE:
+        ParaSet.TRAFFIC_FILE)
+    for file_name in ParaSet.TRAFFIC_FILE:
         shutil.copy(
             os.path.join("./data", file_name),
             os.path.join("./data", file_name))
