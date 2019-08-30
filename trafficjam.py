@@ -34,27 +34,25 @@ class TrafficLightAgent(nn.Module):
         self.seperated_hidden_1 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_1 = nn.Linear(20, num_actions) #  activation : Linear (?)
         self.linear_act_hidden_1 = nn.Linear(num_actions, num_actions)
-        self.selector_hidden_1 = Selector(torch.Tensor([0]))
+        self.selector_hidden_1 = Selector(torch.Tensor([1]))
 
         self.seperated_hidden_2 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_2 = nn.Linear(20, num_actions) #  activation : Linear (?)
         self.linear_act_hidden_2 = nn.Linear(num_actions, num_actions)
-        self.selector_hidden_2 = Selector(torch.Tensor([1]))
+        self.selector_hidden_2 = Selector(torch.Tensor([2]))
 
         self.seperated_hidden_3 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_3 = nn.Linear(20, num_actions) #  activation : Linear (?)
         self.linear_act_hidden_3 = nn.Linear(num_actions, num_actions)
-        self.selector_hidden_3 = Selector(torch.Tensor([2]))
+        self.selector_hidden_3 = Selector(torch.Tensor([3]))
 
         self.seperated_hidden_4 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_4 = nn.Linear(20, num_actions) #  activation : Linear (?)
         self.linear_act_hidden_4 = nn.Linear(num_actions, num_actions)
-        self.selector_hidden_4 = Selector(torch.Tensor([3]))
+        self.selector_hidden_4 = Selector(torch.Tensor([4]))
 
         self.sigmoid = nn.Sigmoid()
         
-        self.multiply
-
     # Called with either one element to determine next action, or a batch
     # during optimization. Returns tensor([[left0exp,right0exp]...]).
     def forward(self, car_number, phase):
