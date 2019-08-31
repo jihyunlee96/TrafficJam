@@ -74,7 +74,7 @@ sumo_agent = SumoAgent(sumoCmd)
 
 current_time = sumo_agent.get_current_time()
 
-num_phases = 4
+num_phases = 2
 
 memory = build_memory(num_phases)
 target_net_outdated = 0
