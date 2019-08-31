@@ -17,8 +17,13 @@ class ParaSet:
         
     RUN_COUNTS = 216000
     BASE_RATIO = [10, 10]
+<<<<<<< HEAD
     TRAFFIC_FILE = ["cross.rou_0.xml", "cross.rou_1.xml", "cross.rou_2.xml", "cross.rou_3.xml", "cross.rou_4.xml", "cross.rou_5.xml", "cross.rou_1_low.xml", "cross.rou_2_low.xml", "cross.rou_3_low.xml", "cross.rou_4_low.xml", "cross.rou_5_low.xml"]
     SUMOCFG_FILE = ["cross_0.sumocfg", "cross_1.sumocfg", "cross_2.sumocfg", "cross_3.sumocfg", "cross_4.sumocfg", "cross_5.sumocfg", "cross_1_low.sumocfg", "cross_2_low.sumocfg", "cross_3_low.sumocfg", "cross_4_low.sumocfg", "cross_5_low.sumocfg"]
+=======
+    TRAFFIC_FILE = ["cross.rou_0.xml", "cross.rou_1.xml", "cross.rou_2.xml", "cross.rou_3.xml", "cross.rou_4.xml", "cross.rou_5.xml", "cross.rou_1_low.xml", "cross.rou_2_low.xml", "cross.rou_3_low.xml", "cross.rou_4_low.xml", "cross.rou_5_low.xml", "cross.rou_1_less.xml", "cross.rou_2_less.xml", "cross.rou_3_less.xml", "cross.rou_4_less.xml", "cross.rou_5_less.xml"]
+    SUMOCFG_FILE = ["cross_0.sumocfg", "cross_1.sumocfg", "cross_2.sumocfg", "cross_3.sumocfg", "cross_4.sumocfg", "cross_5.sumocfg", "cross_1_low.sumocfg", "cross_2_low.sumocfg", "cross_3_low.sumocfg", "cross_4_low.sumocfg", "cross_5_low.sumocfg", "cross_1_less.sumocfg", "cross_2_less.sumocfg", "cross_3_less.sumocfg", "cross_4_less.sumocfg", "cross_5_less.sumocfg"]
+>>>>>>> 14f30f1effa863f44fd3b909536dff77fc66593a
     MODEL_NAME = "TrafficJAM"
     EPSILON = 0.05
 
@@ -62,9 +67,12 @@ def unison_shuffled_copies(states, target, sample_weight):
     new_states.append(states[p])
     return new_states, target[p], sample_weight[p]
 
+<<<<<<< HEAD
 index = random.randint(6, 10)
 traffic_file = [ParaSet.TRAFFIC_FILE[index]]
 sumocfg_file = ParaSet.SUMOCFG_FILE[index]
+=======
+>>>>>>> 14f30f1effa863f44fd3b909536dff77fc66593a
 
 RUN_COUNT = 216000
 GAMMA = 0.8 
@@ -72,21 +80,25 @@ UPDATE_TARGET_NET_FREQ = 5
 
 setting_memo = "original_run"
 
-sumoBinary = checkBinary('sumo-gui')
-sumoCmd = [sumoBinary,
-                 '-c',
-                 r'{0}/data/{1}/{2}'.format(
-                     os.path.split(os.path.realpath(__file__))[0], setting_memo, sumocfg_file)]
-sumoBinary_nogui = checkBinary('sumo')
-sumoCmd_nogui = [sumoBinary_nogui,
-                 '-c',
-                 r'{0}/data/{1}/{2}'.format(
-                     os.path.split(os.path.realpath(__file__))[0], setting_memo, sumocfg_file)]
 
 # 이걸 바꾸면 GUI On/Off를 조절할 수 있다.
 #sumo_agent = SumoAgent(sumoCmd)
 
 for entire_epoch in range(35):
+    index = random.randint(11, 15)
+    traffic_file = [ParaSet.TRAFFIC_FILE[index]]
+    sumocfg_file = ParaSet.SUMOCFG_FILE[index]
+
+    sumoBinary = checkBinary('sumo-gui')
+    sumoCmd = [sumoBinary,
+                     '-c',
+                     r'{0}/data/{1}/{2}'.format(
+                         os.path.split(os.path.realpath(__file__))[0], setting_memo, sumocfg_file)]
+    sumoBinary_nogui = checkBinary('sumo')
+    sumoCmd_nogui = [sumoBinary_nogui,
+                     '-c',
+                     r'{0}/data/{1}/{2}'.format(
+                         os.path.split(os.path.realpath(__file__))[0], setting_memo, sumocfg_file)]
 
     sumo_agent = SumoAgent(sumoCmd)
     current_time = sumo_agent.get_current_time()
@@ -98,7 +110,7 @@ for entire_epoch in range(35):
 
     policy_net = TrafficLightAgent(num_phases).to(device)
     if entire_epoch != 0:
-        policy_net.load_state_dict(torch.load("trafficjam.200000.weight"))
+        policy_net.load_state_dict(torch.load("trafficjam.150000.weight"))
     target_net = TrafficLightAgent(num_phases).to(device)
     target_net.load_state_dict(policy_net.state_dict())
 
@@ -135,10 +147,16 @@ for entire_epoch in range(35):
 
         print("action %d \t reward %f \t q_values %s" % (int(action), reward, repr(q_values)))
 
+        current_time = sumo_agent.get_current_time()
+        if current_time > 670:
+            sumo_agent.terminate_sumo()
+            #torch.save(policy_net.state_dict(), './trafficjam.weight')
+            #print("Saved!")
+            break
+
         '''
         memory[int(phase_id)][action].append([torch.cat((car_number, phase_id), 0), action, reward, next_state])
 
-        current_time = sumo_agent.get_current_time()
 
         # update policy_net
         # calculate average reward
@@ -222,11 +240,6 @@ for entire_epoch in range(35):
                 target_net.load_state_dict(policy_net.state_dict())
                 target_net_outdated = 0
         '''
-        if current_time > 670:
-            sumo_agent.terminate_sumo()
-            #torch.save(policy_net.state_dict(), './trafficjam.weight')
-            #print("Saved!")
-            break
 
 
 
