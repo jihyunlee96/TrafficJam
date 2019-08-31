@@ -1,2 +1,4 @@
 __pycache__/*
 *.weight
+data/log_rewards.txt
+data/original_run/TLS.switch.output.xml
