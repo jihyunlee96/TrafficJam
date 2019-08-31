@@ -500,12 +500,18 @@ def get_car_on_red_and_green(cur_phase):
                                  '-gneE17_2', '-gneE17_3']
     vehicle_red = []
     vehicle_green = []
-    if cur_phase == 1:
-        red_lanes = ['edge1-0_0', 'edge1-0_1', 'edge1-0_2', 'edge2-0_0', 'edge2-0_1', 'edge2-0_2']
-        green_lanes = ['edge3-0_0', 'edge3-0_1', 'edge3-0_2', 'edge4-0_0', 'edge4-0_1', 'edge4-0_2']
+    if cur_phase == 0:
+        red_lanes = ['-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3','-gneE16_0','-gneE16_1','-gneE16_2', '-gneE17_0','-gneE17_1','-gneE17_2', '-gneE17_3']
+        green_lanes = ['-gneE13_0', '-gneE13_1', '-gneE13_2']
+    elif cur_phase == 1:
+        red_lanes = ['-gneE13_0','-gneE13_1','-gneE13_2','-gneE16_0','-gneE16_1','-gneE16_2', '-gneE17_0','-gneE17_1','-gneE17_2', '-gneE17_3']
+        green_lanes = ['-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3',]
+    elif cur_phase == 2:
+        red_lanes = ['-gneE13_0','-gneE13_1','-gneE13_2', '-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3','-gneE17_0','-gneE17_1','-gneE17_2', '-gneE17_3']
+        green_lanes = ['-gneE16_0','-gneE16_1','-gneE16_2']
     else:
-        red_lanes = ['edge3-0_0', 'edge3-0_1', 'edge3-0_2', 'edge4-0_0', 'edge4-0_1', 'edge4-0_2']
-        green_lanes = ['edge1-0_0', 'edge1-0_1', 'edge1-0_2', 'edge2-0_0', 'edge2-0_1', 'edge2-0_2']
+        red_lanes = ['-gneE13_0','-gneE13_1','-gneE13_2', '-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3','-gneE16_0','-gneE16_1','-gneE16_2']
+        green_lanes = ['-gneE17_0','-gneE17_1','-gneE17_2', '-gneE17_3']
     for lane in red_lanes:
         vehicle_red.append(traci.lane.getLastStepVehicleNumber(lane))
     for lane in green_lanes:
