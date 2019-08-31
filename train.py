@@ -37,13 +37,13 @@ def _set_traffic_file(sumo_config_file_tmp_name, sumo_config_file_output_name, l
 
 def set_traffic_file(self):
     _set_traffic_file(
-        os.path.join("./data", "cross.sumocfg"),
-        os.path.join("./data", "cross.sumocfg"),
+        os.path.join("./data/original_run", "cross.sumocfg"),
+        os.path.join("./data/original_run", "cross.sumocfg"),
         ParaSet.TRAFFIC_FILE)
     for file_name in ParaSet.TRAFFIC_FILE:
         shutil.copy(
-            os.path.join("./data", file_name),
-            os.path.join("./data", file_name))
+            os.path.join("./data/original_run", file_name),
+            os.path.join("./data/original_run", file_name))
 
 def unison_shuffled_copies(states, target, sample_weight):
     p = np.random.permutation(len(target))
