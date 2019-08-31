@@ -100,21 +100,23 @@ constantC = 40.0
 carWidth = 3.3
 grid_width = 4
 area_length = 600
-direction_lane_dict = {"NSG": [1, 0], "SNG": [1, 0], "EWG": [1, 0], "WEG": [1, 0],
+direction_lane_dict = {"NSG": [1, 0], "SNG": [1, 0], "EWG": [1, 0], "WEG": [1],
                        "NWG": [0], "WSG": [0], "SEG": [0], "ENG": [0],
-                       "NEG": [2], "WNG": [2], "SWG": [2], "ESG": [2]}
+                       "NEG": [2, 1], "WNG": [3, 2], "SWG": [2], "ESG": [3, 2]}
 direction_list = ["NWG", "WSG", "SEG", "ENG", "NSG", "SNG", "EWG", "WEG", "NEG", "WNG", "SWG", "ESG"]
 
 #min_phase_time = [30, 96, 74]
 min_phase_time_7 = [10, 35]
-node_light_7 = "node0"
+node_light_7 = "gneJ10"
 phases_light_7 = ["WNG_ESG_EWG_WEG_WSG_ENG", "NSG_NEG_SNG_SWG_NWG_SEG"]
 WNG_ESG_EWG_WEG_WSG_ENG = "grrr gGGG grrr gGGG".replace(" ", "")
 NSG_NEG_SNG_SWG_NWG_SEG = "gGGG grrr gGGG grrr".replace(" ", "")
 controlSignal = (WNG_ESG_EWG_WEG_WSG_ENG, NSG_NEG_SNG_SWG_NWG_SEG)
 
-listLanes=['edge1-0_0','edge1-0_1','edge1-0_2','edge2-0_0','edge2-0_1','edge2-0_2',
-                                 'edge3-0_0','edge3-0_1','edge3-0_2','edge4-0_0','edge4-0_1','edge4-0_2']
+listLanes=['-gneE13_0','-gneE13_1','-gneE13_2', '-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3',
+                                 '-gneE16_0','-gneE16_1','-gneE16_2', '-gneE17_0','-gneE17_1',
+                                 '-gneE17_2', '-gneE17_3']
+
 '''
 input: phase "NSG_SNG" , four lane number, in the key of W,E,S,N
 output: 
@@ -136,7 +138,7 @@ def get_current_time():
     return traci.simulation.getCurrentTime() / 1000
 
 def phase_affected_lane(phase="NSG_SNG",
-                        four_lane_ids={'W': 'edge1-0', "E": "edge2-0", 'S': 'edge4-0', 'N': 'edge3-0'}):
+                        four_lane_ids={'W': '-gneE17', "E": "-gneE15", 'S': '-gneE16', 'N': '-gneE13'}):
     directions = phase.split('_')
     affected_lanes = []
     for direction in directions:
@@ -339,38 +341,23 @@ def log_rewards(vehicle_dict, action, rewards_info_dict, file_name, timestamp,re
     fp.close()
     rewards_detail_dict_list.append(reward_detail_dict)
 
-
 def get_rewards_from_sumo(vehicle_dict, action, rewards_info_dict,
-                          listLanes=['edge1-0_0','edge1-0_1','edge1-0_2','edge2-0_0','edge2-0_1','edge2-0_2',
-                                 'edge3-0_0','edge3-0_1','edge3-0_2','edge4-0_0','edge4-0_1','edge4-0_2'],):
+                          listLanes=['-gneE13_0','-gneE13_1','-gneE13_2', '-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3',
+                                 '-gneE16_0','-gneE16_1','-gneE16_2', '-gneE17_0','-gneE17_1',
+                                 '-gneE17_2', '-gneE17_3'],):
     reward = 0
     import copy
     reward_detail_dict = copy.deepcopy(rewards_info_dict)
-
-    vehicle_id_entering_list = get_vehicle_id_entering()
-
     reward_detail_dict['queue_length'].append(get_overall_queue_length(listLanes))
-
-    vehicle_id_list = traci.vehicle.getIDList()
-    reward_detail_dict['num_of_vehicles_in_system'] = [False, 0, len(vehicle_id_list)]
-
-    reward_detail_dict['num_of_vehicles_at_entering'] = [False, 0, len(vehicle_id_entering_list)]
-
-
-    vehicle_id_leaving = get_vehicle_id_leaving(vehicle_dict)
-
-    # reward_detail_dict['num_of_vehicles_left'].append(len(vehicle_id_leaving))
-    # reward_detail_dict['duration_of_vehicles_left'].append(get_travel_time_duration(vehicle_dict, vehicle_id_leaving))
-    return -reward_detail_dict['queue_length'][2], reward_detail_dict
+    reward = reward_detail_dict['queue_length'][2]
+    
+    return -reward, reward_detail_dict
 
 def get_rewards_from_dict_list(rewards_detail_dict_list):
     reward = 0
     for i in range(len(rewards_detail_dict_list)):
-        for k, v in rewards_detail_dict_list[i].items():
-            if v[0]:  # True or False
-                reward += v[1] * v[2]
-    reward = restrict_reward(reward)
-    return reward
+        reward += rewards_detail_dict_list[i]['queue_length'][2]
+    return -reward
 
 def get_overall_queue_length(listLanes):
     overall_queue_length = 0
@@ -504,8 +491,9 @@ def get_vehicle_id_leaving(vehicle_dict):
 
 
 def get_car_on_red_and_green(cur_phase):
-    listLanes = ['edge1-0_0', 'edge1-0_1', 'edge1-0_2', 'edge2-0_0', 'edge2-0_1', 'edge2-0_2',
-                 'edge3-0_0', 'edge3-0_1', 'edge3-0_2', 'edge4-0_0', 'edge4-0_1', 'edge4-0_2']
+    listLanes=['-gneE13_0','-gneE13_1','-gneE13_2', '-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3',
+                                 '-gneE16_0','-gneE16_1','-gneE16_2', '-gneE17_0','-gneE17_1',
+                                 '-gneE17_2', '-gneE17_3']
     vehicle_red = []
     vehicle_green = []
     if cur_phase == 1:
