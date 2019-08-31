@@ -4,9 +4,9 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 import torchvision.transforms as T
+from torchvision.transforms import ToTensor
 
-# if gpu is to be used
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.cuda.set_device(0)
 
 class TrafficLightAgent(nn.Module):
     '''
@@ -34,22 +34,30 @@ class TrafficLightAgent(nn.Module):
         self.seperated_hidden_1 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_1 = nn.Linear(20, num_actions) #  activation : Linear (?)
         self.linear_act_hidden_1 = nn.Linear(num_actions, num_actions)
-        self.selector_hidden_1 = Selector(torch.Tensor([0]))
+        tensor1 = torch.Tensor([0])
+        tensor1 = tensor1.to(device)
+        self.selector_hidden_1 = Selector(tensor1)
 
         self.seperated_hidden_2 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_2 = nn.Linear(20, num_actions) #  activation : Linear (?)
         self.linear_act_hidden_2 = nn.Linear(num_actions, num_actions)
-        self.selector_hidden_2 = Selector(torch.Tensor([1]))
+        tensor2 = torch.Tensor([1])
+        tensor2 = tensor2.to(device)
+        self.selector_hidden_2 = Selector(tensor2)
 
         self.seperated_hidden_3 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_3 = nn.Linear(20, num_actions) #  activation : Linear (?)
         self.linear_act_hidden_3 = nn.Linear(num_actions, num_actions)
-        self.selector_hidden_3 = Selector(torch.Tensor([2]))
+        tensor3 = torch.Tensor([2])
+        tensor3 = tensor3.to(device)
+        self.selector_hidden_3 = Selector(tensor3)
 
         self.seperated_hidden_4 = nn.Linear(20, 20) # activation : Sigmoid
         self.q_values_hidden_4 = nn.Linear(20, num_actions) #  activation : Linear (?)
         self.linear_act_hidden_4 = nn.Linear(num_actions, num_actions)
-        self.selector_hidden_4 = Selector(torch.Tensor([3]))
+        tensor4 = torch.Tensor([3])
+        tensor4 = tensor4.to(device)
+        self.selector_hidden_4 = Selector(tensor4)
 
         self.sigmoid = nn.Sigmoid()
         

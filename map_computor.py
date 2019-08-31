@@ -109,10 +109,10 @@ direction_list = ["NWG", "WSG", "SEG", "ENG", "NSG", "SNG", "EWG", "WEG", "NEG",
 min_phase_time_7 = [10, 35]
 node_light_7 = "gneJ10"
 phases_light_7 = ["NEG_NSG_NWG_ENG_SEG_WSG", "EWG_ESG_NWG_ENG_SEG_WSG", "SNG_SWG_NWG_ENG_SEG_WSG", "WEG_WNG_NWG_ENG_SEG_WSG"]
-NEG_NSG_NWG_ENG_SEG_WSG = "gGGGG Grrrrr grrr grrrr".replace(" ","")
-EWG_ESG_NWG_ENG_SEG_WSG = "grrrr gGGGGG Grrr grrrr".replace(" ","")
-SNG_SWG_NWG_ENG_SEG_WSG = "grrrr grrrrr gGGG Grrrr".replace(" ","")
-WEG_WNG_NWG_ENG_SEG_WSG = "Grrrr grrrrr grrr gGGGG".replace(" ","")
+NEG_NSG_NWG_ENG_SEG_WSG = "gGGGG grrrr grrr grrr".replace(" ","")
+EWG_ESG_NWG_ENG_SEG_WSG = "grrrr gGGGG grrr grrr".replace(" ","")
+SNG_SWG_NWG_ENG_SEG_WSG = "grrrr grrrr gGGG grrr".replace(" ","")
+WEG_WNG_NWG_ENG_SEG_WSG = "grrrr grrrr grrr gGGG".replace(" ","")
 
 controlSignal = (NEG_NSG_NWG_ENG_SEG_WSG, EWG_ESG_NWG_ENG_SEG_WSG, SNG_SWG_NWG_ENG_SEG_WSG, WEG_WNG_NWG_ENG_SEG_WSG)
 
@@ -259,7 +259,7 @@ def translateAction(action):
 
 def changeTrafficLight_7(current_phase=0, action=0):  # [WNG_ESG_WSG_ENG_NWG_SEG]
     # phases=["WNG_ESG_WSG_ENG_NWG_SEG","EWG_WEG_WSG_ENG_NWG_SEG","NSG_NEG_SNG_SWG_WSG_ENG_NWG_SEG"]
-    next_phase = action # (current_phase + 1) % len(controlSignal)
+    next_phase = int(action) # (current_phase + 1) % len(controlSignal)
     next_phase_time_eclipsed = 0
     traci.trafficlight.setRedYellowGreenState(node_light_7, controlSignal[next_phase])
     return next_phase, next_phase_time_eclipsed
@@ -300,24 +300,6 @@ def calculate_reward(tempLastVehicleStateList):
     PI = waitedTime/len(tempLastVehicleStateList) if len(tempLastVehicleStateList)!=0 else 0
     return - PI
 
-def getMapOfVehicles(area_length=600):
-    '''
-    get the vehicle positions as NIPS paper
-    :param area_length:
-    :return: numpy narray
-    '''
-    length_num_grids = int(area_length / grid_width)
-    mapOfCars = np.zeros((length_num_grids, length_num_grids))
-
-    vehicle_id_list = traci.vehicle.getIDList()
-    for vehicle_id in vehicle_id_list:
-        vehicle_position = traci.vehicle.getPosition(vehicle_id)  # (double,double),tuple
-
-        transform_tuple = vehicle_location_mapper(vehicle_position)  # call the function
-        mapOfCars[transform_tuple[0], transform_tuple[1]] = 1
-
-    return mapOfCars
-
 def restrict_reward(reward,func="unstrict"):
     if func == "linear":
         bound = -50
@@ -328,6 +310,38 @@ def restrict_reward(reward,func="unstrict"):
         pass
 
     return reward
+
+def getMapOfVehicles(area_length=600):
+    '''
+    get the vehicle positions as NIPS paper
+    :param area_length:
+    :return: numpy narray
+    '''
+    length_num_grids = int(area_length / grid_width)
+    mapOfCars = np.zeros((length_num_grids, length_num_grids))
+
+    return mapOfCars
+
+def status_calculator():
+    laneQueueTracker=[]
+    laneNumVehiclesTracker=[]
+    laneWaitingTracker=[]
+    #================= COUNT HALTED VEHICLES (I.E. QUEUE SIZE) (12 elements)
+    for lane in listLanes:
+        laneQueueTracker.append(traci.lane.getLastStepHaltingNumber(lane))
+
+    # ================ count vehicles in lane
+    for lane in listLanes:
+        laneNumVehiclesTracker.append(traci.lane.getLastStepVehicleNumber(lane))
+
+    # ================ cum waiting time in minutes
+    for lane in listLanes:
+        laneWaitingTracker.append(traci.lane.getWaitingTime(str(lane)) / 60)
+
+    # ================ get position matrix of vehicles on lanes
+    mapOfCars = getMapOfVehicles(area_length=area_length)
+
+    return [laneQueueTracker, laneNumVehiclesTracker, laneWaitingTracker, mapOfCars]
 
 
 def log_rewards(vehicle_dict, action, rewards_info_dict, file_name, timestamp,rewards_detail_dict_list):
@@ -418,27 +432,6 @@ def update_vehicles_state(dic_vehicles):
 
     return dic_vehicles
 
-def status_calculator():
-    laneQueueTracker=[]
-    laneNumVehiclesTracker=[]
-    laneWaitingTracker=[]
-    #================= COUNT HALTED VEHICLES (I.E. QUEUE SIZE) (12 elements)
-    for lane in listLanes:
-        laneQueueTracker.append(traci.lane.getLastStepHaltingNumber(lane))
-
-    # ================ count vehicles in lane
-    for lane in listLanes:
-        laneNumVehiclesTracker.append(traci.lane.getLastStepVehicleNumber(lane))
-
-    # ================ cum waiting time in minutes
-    for lane in listLanes:
-        laneWaitingTracker.append(traci.lane.getWaitingTime(str(lane)) / 60)
-
-    # ================ get position matrix of vehicles on lanes
-    mapOfCars = getMapOfVehicles(area_length=area_length)
-
-    return [laneQueueTracker, laneNumVehiclesTracker, laneWaitingTracker, mapOfCars]
-
 def get_vehicle_id_entering():
     vehicle_id_entering = []
     entering_lanes = ['-gneE13_0','-gneE13_1','-gneE13_2', '-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3',
@@ -493,14 +486,8 @@ def get_car_on_red_and_green(cur_phase):
 
     return max(vehicle_red), max(vehicle_green)
 
-def get_status_img(current_phase,tl_node_id=node_light_7,area_length=600):
-    mapOfCars = getMapOfVehicles(area_length=area_length)
-
-    current_observation = [mapOfCars]
-    return current_observation
-
 def set_yellow(dic_vehicles,rewards_info_dict,f_log_rewards,rewards_detail_dict_list,node_id="node0"):
-    Yellow = "yyyyyyyyyyyyyyyyyyyy"
+    Yellow = "gyyyygyyyygyyygyyy"
     for i in range(3):
         timestamp = traci.simulation.getCurrentTime() / 1000
         traci.trafficlight.setRedYellowGreenState(node_id, Yellow)
@@ -520,7 +507,7 @@ def set_all_red(dic_vehicles,rewards_info_dict,f_log_rewards,rewards_detail_dict
 def run(action, current_phase, current_phase_duration, vehicle_dict, rewards_info_dict, f_log_rewards, rewards_detail_dict_list,node_id="gneJ10", changed=False):
     return_phase = current_phase
     return_phase_duration = current_phase_duration
-    if changed:
+    if changed == True:
         set_yellow(vehicle_dict,rewards_info_dict,f_log_rewards, rewards_detail_dict_list,node_id=node_id)
         # set_all_red(vehicle_dict,rewards_info_dict,f_log_rewards, node_id=node_id)
         return_phase, _ = changeTrafficLight_7(current_phase=current_phase, action=action)  # change traffic light in SUMO according to actionToPerform
@@ -549,6 +536,10 @@ def phase_vector_to_number(phase_vector,phases_light=phases_light_7):
         return phase_vector_7.index(phase_vector)
     else:
         raise ("Phase vector %s is not in phases_light %s"%(phase_vector,str(phase_vector_7)))
+
+def terminate_sumo():
+    traci.close()
+    return 
 
 
 

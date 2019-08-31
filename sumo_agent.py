@@ -66,24 +66,21 @@ class SumoAgent:
 
     def take_action(self, action, phase):
         current_phase_number = self.get_current_phase()
-        print(current_phase_number)
         rewards_detail_dict_list = []
         if int(action) == int(phase):
             changed = False
         else:
             changed = True
-        # 현재 신호가 최소 지속 시간을 넘지 않았다면 action은 유지
-        if (self.current_phase_duration < self.ParaSet.MIN_PHASE_TIME[current_phase_number]):
-            action = phase
+        # 현재 신호가 최소 지속 시간을 넘지 않았다면 a
         # MIN_ACTION_TIME 까지 돌아라(5까지)
         for i in range(self.ParaSet.MIN_ACTION_TIME):
             # action time 동안에 
-            action_in_second = 0
+            action_in_second = self.get_current_phase()
             current_phase_number = self.get_current_phase()
             #### 이 부분 바꿔야함!###
             # a가 바꾸는 거라면 일단 첫 액션은 바꾸는 걸로 해라
-            if action == 1 and i == 0:
-                action_in_second = 1
+            if changed and i == 0:
+                action_in_second = action
             # 현재 상황에서 actioninsecond을 주었을 때의 결과
             self.current_phase, self.current_phase_duration, self.vehicle_dict = map_computor.run(action=action_in_second,
                                                                                current_phase=current_phase_number,
@@ -93,6 +90,7 @@ class SumoAgent:
                                                                                f_log_rewards=self.f_log_rewards,
                                                                                changed=changed,
                                                                                rewards_detail_dict_list=rewards_detail_dict_list)  # run 1s SUMO
+            changed = False
 
         reward = self.cal_reward_from_list(rewards_detail_dict_list)
 
@@ -121,6 +119,10 @@ class SumoAgent:
     def cal_reward_from_list(self, reward_detail_dict_list):
         reward = map_computor.get_rewards_from_dict_list(reward_detail_dict_list)
         return reward * 0.2
+
+    def terminate_sumo(self):
+        map_computor.terminate_sumo()
+        return
 
 
 if __name__ == '__main__':
