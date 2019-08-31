@@ -524,7 +524,7 @@ def get_status_img(current_phase,tl_node_id=node_light_7,area_length=600):
     return current_observation
 
 def set_yellow(dic_vehicles,rewards_info_dict,f_log_rewards,rewards_detail_dict_list,node_id="node0"):
-    Yellow = "yyyyyyyyyyyyyyyy"
+    Yellow = "yyyyyyyyyyyyyyyyyyyy"
     for i in range(3):
         timestamp = traci.simulation.getCurrentTime() / 1000
         traci.trafficlight.setRedYellowGreenState(node_id, Yellow)
@@ -533,7 +533,7 @@ def set_yellow(dic_vehicles,rewards_info_dict,f_log_rewards,rewards_detail_dict_
         update_vehicles_state(dic_vehicles)
 
 def set_all_red(dic_vehicles,rewards_info_dict,f_log_rewards,rewards_detail_dict_list,node_id="node0"):
-    Red = "rrrrrrrrrrrrrrrr"
+    Red = "rrrrrrrrrrrrrrrrrrrr"
     for i in range(3):
         timestamp = traci.simulation.getCurrentTime()/1000
         traci.trafficlight.setRedYellowGreenState(node_id, Red)
@@ -541,7 +541,7 @@ def set_all_red(dic_vehicles,rewards_info_dict,f_log_rewards,rewards_detail_dict
         log_rewards(dic_vehicles, 0, rewards_info_dict, f_log_rewards, timestamp,rewards_detail_dict_list)
         update_vehicles_state(dic_vehicles)
 
-def run(action, current_phase, current_phase_duration, vehicle_dict, rewards_info_dict, f_log_rewards, rewards_detail_dict_list,node_id="node0"):
+def run(action, current_phase, current_phase_duration, vehicle_dict, rewards_info_dict, f_log_rewards, rewards_detail_dict_list,node_id="gneJ10"):
     return_phase = current_phase
     return_phase_duration = current_phase_duration
     if action == 1:
