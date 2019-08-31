@@ -144,8 +144,10 @@
     </edge>
 
     <tlLogic id="gneJ10" type="static" programID="0" offset="0">
-        <phase duration="1000000" state="rrrrrGGGggGrrrGGgg"/>
-        <phase duration="1000000"  state="rrrrryyyggyrrryygg"/>
+        <phase duration="1000000" state="gGGGGGrrrrrgrrrgrrrr"/>
+        <phase duration="1000000" state="grrrrgGGGGGGrrrgrrrr"/>
+        <phase duration="1000000" state="grrrrgrrrrrgGGGGrrrr"/>
+        <phase duration="1000000" state="GrrrrgrrrrrgrrrgGGGG"/>
     </tlLogic>
 
     <junction id="gneJ1" type="dead_end" x="90.00" y="50.00" incLanes="gneE15_0 gneE15_1 gneE15_2 gneE15_3" intLanes="" shape="90.00,50.00 90.00,37.20 90.00,50.00"/>
