@@ -100,21 +100,26 @@ constantC = 40.0
 carWidth = 3.3
 grid_width = 4
 area_length = 600
-direction_lane_dict = {"NSG": [1, 0], "SNG": [1, 0], "EWG": [1, 0], "WEG": [1, 0],
+direction_lane_dict = {"NSG": [1, 0], "SNG": [1, 0], "EWG": [1, 0], "WEG": [1],
                        "NWG": [0], "WSG": [0], "SEG": [0], "ENG": [0],
-                       "NEG": [2], "WNG": [2], "SWG": [2], "ESG": [2]}
+                       "NEG": [2, 1], "WNG": [3, 2], "SWG": [2], "ESG": [3, 2]}
 direction_list = ["NWG", "WSG", "SEG", "ENG", "NSG", "SNG", "EWG", "WEG", "NEG", "WNG", "SWG", "ESG"]
 
 #min_phase_time = [30, 96, 74]
 min_phase_time_7 = [10, 35]
-node_light_7 = "node0"
-phases_light_7 = ["WNG_ESG_EWG_WEG_WSG_ENG", "NSG_NEG_SNG_SWG_NWG_SEG"]
-WNG_ESG_EWG_WEG_WSG_ENG = "grrr gGGG grrr gGGG".replace(" ", "")
-NSG_NEG_SNG_SWG_NWG_SEG = "gGGG grrr gGGG grrr".replace(" ", "")
-controlSignal = (WNG_ESG_EWG_WEG_WSG_ENG, NSG_NEG_SNG_SWG_NWG_SEG)
+node_light_7 = "gneJ10"
+phases_light_7 = ["NEG_NSG_NWG_ENG_SEG_WSG", "EWG_ESG_NWG_ENG_SEG_WSG", "SNG_SWG_NWG_ENG_SEG_WSG", "WEG_WNG_NWG_ENG_SEG_WSG"]
+NEG_NSG_NWG_ENG_SEG_WSG = "gGGGG Grrrrr grrr grrrr".replace(" ","")
+EWG_ESG_NWG_ENG_SEG_WSG = "grrrr gGGGGG Grrr grrrr".replace(" ","")
+SNG_SWG_NWG_ENG_SEG_WSG = "grrrr grrrrr gGGG Grrrr".replace(" ","")
+WEG_WNG_NWG_ENG_SEG_WSG = "Grrrr grrrrr grrr gGGGG".replace(" ","")
 
-listLanes=['edge1-0_0','edge1-0_1','edge1-0_2','edge2-0_0','edge2-0_1','edge2-0_2',
-                                 'edge3-0_0','edge3-0_1','edge3-0_2','edge4-0_0','edge4-0_1','edge4-0_2']
+controlSignal = (NEG_NSG_NWG_ENG_SEG_WSG, EWG_ESG_NWG_ENG_SEG_WSG, SNG_SWG_NWG_ENG_SEG_WSG, WEG_WNG_NWG_ENG_SEG_WSG)
+
+listLanes=['-gneE13_0','-gneE13_1','-gneE13_2', '-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3',
+                                 '-gneE16_0','-gneE16_1','-gneE16_2', '-gneE17_0','-gneE17_1',
+                                 '-gneE17_2', '-gneE17_3']
+
 '''
 input: phase "NSG_SNG" , four lane number, in the key of W,E,S,N
 output: 
@@ -136,7 +141,7 @@ def get_current_time():
     return traci.simulation.getCurrentTime() / 1000
 
 def phase_affected_lane(phase="NSG_SNG",
-                        four_lane_ids={'W': 'edge1-0', "E": "edge2-0", 'S': 'edge4-0', 'N': 'edge3-0'}):
+                        four_lane_ids={'W': '-gneE17', "E": "-gneE15", 'S': '-gneE16', 'N': '-gneE13'}):
     directions = phase.split('_')
     affected_lanes = []
     for direction in directions:
@@ -156,7 +161,7 @@ output: four_lane_ids={'W':'edge1-0',"E":"edge2-0",'S':'edge4-0','N':'edge3-0'})
 '''
 
 
-def find_surrounding_lane_WESN(central_node_id="node0", WESN_node_ids={"W": "1", "E": "2", "S": "3", "N": "4"}):
+def find_surrounding_lane_WESN(central_node_id="gneJ10", WESN_node_ids={"W": "gneJ5", "E": "gneJ1", "S": "gneJ7", "N": "gneJ6"}):
     tree = ET.parse('./data/cross.net.xml')
     root = tree.getroot()
     four_lane_ids_dict = {}
@@ -183,8 +188,8 @@ def coordinate_mapper(x1, y1, x2, y2, area_length=600, area_width=600):
     width_num_grids = int(area_width / grid_width)
     return length_num_grids - y_max, length_num_grids - y_min, x_min, x_max
 
-def get_phase_affected_lane_traffic_max_volume(phase="NSG_SNG", tl_node_id="node0",
-                                 WESN_node_ids={"W": "1", "E": "2", "S": "3", "N": "4"}):
+def get_phase_affected_lane_traffic_max_volume(phase="NSG_SNG", tl_node_id="gneJ10",
+                                 WESN_node_ids={"W": "gneJ5", "E": "gneJ1", "S": "gneJ7", "N": "gneJ6"}):
     four_lane_ids_dict = find_surrounding_lane_WESN(central_node_id=tl_node_id, WESN_node_ids=WESN_node_ids)
     directions = phase.split('_')
     traffic_volume_start_end = []
@@ -202,8 +207,8 @@ def get_phase_affected_lane_traffic_max_volume(phase="NSG_SNG", tl_node_id="node
     return max(phase_volumes)
 
 
-def phase_affected_lane_position(phase="NSG_SNG", tl_node_id="node0",
-                                 WESN_node_ids={"W": "1", "E": "2", "S": "3", "N": "4"}):
+def phase_affected_lane_position(phase="NSG_SNG", tl_node_id="gneJ10",
+                                 WESN_node_ids={"W": "gneJ5", "E": "gneJ1", "S": "gneJ7", "N": "gneJ6"}):
     '''
     input: NSG_SNG ,central nodeid "node0", surrounding nodes WESN: {"W":"1", "E":"2", "S":"3", "N":"4"}
     output: edge-ids, 4_0_0, 4_0_1, 3_0_0, 3_0_1
@@ -225,8 +230,8 @@ def phase_affected_lane_position(phase="NSG_SNG", tl_node_id="node0",
     return indexes
 
 
-def phases_affected_lane_postions(phases=["NSG_SNG_NWG_SEG", "NEG_SWG_NWG_SEG"], tl_node_id="node0",
-                                  WESN_node_ids={"W": "1", "E": "2", "S": "3", "N": "4"}):
+def phases_affected_lane_postions(phases=["NSG_SNG_NWG_SEG", "NEG_SWG_NWG_SEG"], tl_node_id="gneJ10",
+                                  WESN_node_ids={"W": "gneJ5", "E": "gneJ1", "S": "gneJ7", "N": "gneJ6"}):
     parameterArray = []
     for phase in phases:
         parameterArray += phase_affected_lane_position(phase=phase, tl_node_id=tl_node_id, WESN_node_ids=WESN_node_ids)
@@ -270,7 +275,7 @@ def get_phase_vector(current_phase=0):
     return np.array(phase_vector)
 
 
-def getMapOfCertainTrafficLight(curtent_phase=0, tl_node_id="node0", area_length=600):
+def getMapOfCertainTrafficLight(curtent_phase=0, tl_node_id="gneJ10", area_length=600):
     current_phases_light_7 = [phases_light_7[curtent_phase]]
     parameterArray = phases_affected_lane_postions(phases=current_phases_light_7)
     length_num_grids = int(area_length / grid_width)
@@ -340,8 +345,9 @@ def log_rewards(vehicle_dict, action, rewards_info_dict, file_name, timestamp,re
     rewards_detail_dict_list.append(reward_detail_dict)
 
 def get_rewards_from_sumo(vehicle_dict, action, rewards_info_dict,
-                          listLanes=['edge1-0_0','edge1-0_1','edge1-0_2','edge2-0_0','edge2-0_1','edge2-0_2',
-                                 'edge3-0_0','edge3-0_1','edge3-0_2','edge4-0_0','edge4-0_1','edge4-0_2'],):
+                          listLanes=['-gneE13_0','-gneE13_1','-gneE13_2', '-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3',
+                                 '-gneE16_0','-gneE16_1','-gneE16_2', '-gneE17_0','-gneE17_1',
+                                 '-gneE17_2', '-gneE17_3'],):
     reward = 0
     import copy
     reward_detail_dict = copy.deepcopy(rewards_info_dict)
@@ -468,8 +474,9 @@ def status_calculator():
 
 def get_vehicle_id_entering():
     vehicle_id_entering = []
-    entering_lanes = ['edge1-0_0', 'edge1-0_1', 'edge1-0_2', 'edge2-0_0', 'edge2-0_1', 'edge2-0_2',
-                     'edge3-0_0', 'edge3-0_1', 'edge3-0_2', 'edge4-0_0', 'edge4-0_1', 'edge4-0_2']
+    entering_lanes = ['-gneE13_0','-gneE13_1','-gneE13_2', '-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3',
+                                 '-gneE16_0','-gneE16_1','-gneE16_2', '-gneE17_0','-gneE17_1',
+                                 '-gneE17_2', '-gneE17_3']
 
     for lane in entering_lanes:
         vehicle_id_entering.extend(traci.lane.getLastStepVehicleIDs(lane))
@@ -488,16 +495,23 @@ def get_vehicle_id_leaving(vehicle_dict):
 
 
 def get_car_on_red_and_green(cur_phase):
-    listLanes = ['edge1-0_0', 'edge1-0_1', 'edge1-0_2', 'edge2-0_0', 'edge2-0_1', 'edge2-0_2',
-                 'edge3-0_0', 'edge3-0_1', 'edge3-0_2', 'edge4-0_0', 'edge4-0_1', 'edge4-0_2']
+    listLanes=['-gneE13_0','-gneE13_1','-gneE13_2', '-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3',
+                                 '-gneE16_0','-gneE16_1','-gneE16_2', '-gneE17_0','-gneE17_1',
+                                 '-gneE17_2', '-gneE17_3']
     vehicle_red = []
     vehicle_green = []
-    if cur_phase == 1:
-        red_lanes = ['edge1-0_0', 'edge1-0_1', 'edge1-0_2', 'edge2-0_0', 'edge2-0_1', 'edge2-0_2']
-        green_lanes = ['edge3-0_0', 'edge3-0_1', 'edge3-0_2', 'edge4-0_0', 'edge4-0_1', 'edge4-0_2']
+    if cur_phase == 0:
+        red_lanes = ['-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3','-gneE16_0','-gneE16_1','-gneE16_2', '-gneE17_0','-gneE17_1','-gneE17_2', '-gneE17_3']
+        green_lanes = ['-gneE13_0', '-gneE13_1', '-gneE13_2']
+    elif cur_phase == 1:
+        red_lanes = ['-gneE13_0','-gneE13_1','-gneE13_2','-gneE16_0','-gneE16_1','-gneE16_2', '-gneE17_0','-gneE17_1','-gneE17_2', '-gneE17_3']
+        green_lanes = ['-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3',]
+    elif cur_phase == 2:
+        red_lanes = ['-gneE13_0','-gneE13_1','-gneE13_2', '-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3','-gneE17_0','-gneE17_1','-gneE17_2', '-gneE17_3']
+        green_lanes = ['-gneE16_0','-gneE16_1','-gneE16_2']
     else:
-        red_lanes = ['edge3-0_0', 'edge3-0_1', 'edge3-0_2', 'edge4-0_0', 'edge4-0_1', 'edge4-0_2']
-        green_lanes = ['edge1-0_0', 'edge1-0_1', 'edge1-0_2', 'edge2-0_0', 'edge2-0_1', 'edge2-0_2']
+        red_lanes = ['-gneE13_0','-gneE13_1','-gneE13_2', '-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3','-gneE16_0','-gneE16_1','-gneE16_2']
+        green_lanes = ['-gneE17_0','-gneE17_1','-gneE17_2', '-gneE17_3']
     for lane in red_lanes:
         vehicle_red.append(traci.lane.getLastStepVehicleNumber(lane))
     for lane in green_lanes:
@@ -519,7 +533,7 @@ def get_status_img(current_phase,tl_node_id=node_light_7,area_length=600):
     return current_observation
 
 def set_yellow(dic_vehicles,rewards_info_dict,f_log_rewards,rewards_detail_dict_list,node_id="node0"):
-    Yellow = "yyyyyyyyyyyyyyyy"
+    Yellow = "yyyyyyyyyyyyyyyyyyyy"
     for i in range(3):
         timestamp = traci.simulation.getCurrentTime() / 1000
         traci.trafficlight.setRedYellowGreenState(node_id, Yellow)
@@ -528,7 +542,7 @@ def set_yellow(dic_vehicles,rewards_info_dict,f_log_rewards,rewards_detail_dict_
         update_vehicles_state(dic_vehicles)
 
 def set_all_red(dic_vehicles,rewards_info_dict,f_log_rewards,rewards_detail_dict_list,node_id="node0"):
-    Red = "rrrrrrrrrrrrrrrr"
+    Red = "rrrrrrrrrrrrrrrrrrrr"
     for i in range(3):
         timestamp = traci.simulation.getCurrentTime()/1000
         traci.trafficlight.setRedYellowGreenState(node_id, Red)
@@ -536,7 +550,7 @@ def set_all_red(dic_vehicles,rewards_info_dict,f_log_rewards,rewards_detail_dict
         log_rewards(dic_vehicles, 0, rewards_info_dict, f_log_rewards, timestamp,rewards_detail_dict_list)
         update_vehicles_state(dic_vehicles)
 
-def run(action, current_phase, current_phase_duration, vehicle_dict, rewards_info_dict, f_log_rewards, rewards_detail_dict_list,node_id="node0"):
+def run(action, current_phase, current_phase_duration, vehicle_dict, rewards_info_dict, f_log_rewards, rewards_detail_dict_list,node_id="gneJ10"):
     return_phase = current_phase
     return_phase_duration = current_phase_duration
     if action == 1:
