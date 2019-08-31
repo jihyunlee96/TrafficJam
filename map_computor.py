@@ -506,7 +506,7 @@ def get_car_on_red_and_green(cur_phase):
 
 def set_yellow(dic_vehicles,rewards_info_dict,f_log_rewards,rewards_detail_dict_list,node_id="node0"):
     Yellow = "gyyyygyyyygyyygyyy"
-    for i in range(3):
+    for i in range(8):
         timestamp = traci.simulation.getCurrentTime() / 1000
         traci.trafficlight.setRedYellowGreenState(node_id, Yellow)
         traci.simulationStep()

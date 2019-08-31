@@ -17,8 +17,8 @@ class ParaSet:
         
     RUN_COUNTS = 216000
     BASE_RATIO = [10, 10]
-    TRAFFIC_FILE = ["cross.rou_0.xml", "cross.rou_1.xml", "cross.rou_2.xml", "cross.rou_3.xml", "cross.rou_4.xml", "cross.rou_5.xml", "cross.rou_1_low.xml", "cross.rou_2_low.xml", "cross.rou_3_low.xml", "cross.rou_4_low.xml", "cross.rou_5_low.xml"]
-    SUMOCFG_FILE = ["cross_0.sumocfg", "cross_1.sumocfg", "cross_2.sumocfg", "cross_3.sumocfg", "cross_4.sumocfg", "cross_5.sumocfg", "cross_1_low.sumocfg", "cross_2_low.sumocfg", "cross_3_low.sumocfg", "cross_4_low.sumocfg", "cross_5_low.sumocfg"]
+    TRAFFIC_FILE = ["cross.rou_0.xml", "cross.rou_1.xml", "cross.rou_2.xml", "cross.rou_3.xml", "cross.rou_4.xml", "cross.rou_5.xml", "cross.rou_1_low.xml", "cross.rou_2_low.xml", "cross.rou_3_low.xml", "cross.rou_4_low.xml", "cross.rou_5_low.xml", "cross.rou_1_less.xml", "cross.rou_2_less.xml", "cross.rou_3_less.xml", "cross.rou_4_less.xml", "cross.rou_5_less.xml"]
+    SUMOCFG_FILE = ["cross_0.sumocfg", "cross_1.sumocfg", "cross_2.sumocfg", "cross_3.sumocfg", "cross_4.sumocfg", "cross_5.sumocfg", "cross_1_low.sumocfg", "cross_2_low.sumocfg", "cross_3_low.sumocfg", "cross_4_low.sumocfg", "cross_5_low.sumocfg", "cross_1_less.sumocfg", "cross_2_less.sumocfg", "cross_3_less.sumocfg", "cross_4_less.sumocfg", "cross_5_less.sumocfg"]
     MODEL_NAME = "TrafficJAM"
     EPSILON = 0.05
 
@@ -75,7 +75,12 @@ step_count = 0
 
 for entire_epoch in range(350):
 
-    index = random.randint(0, 10)
+    if entire_epoch < 250:
+        index = random.randint(11, 15)
+    elif entire_epoch < 400:
+        index = random.randint(6, 15)
+    else:
+        index = random.randint(0, 15)
     traffic_file = [ParaSet.TRAFFIC_FILE[index]]
     sumocfg_file = ParaSet.SUMOCFG_FILE[index]
 
@@ -99,8 +104,8 @@ for entire_epoch in range(350):
     target_net_outdated = 0
 
     policy_net = TrafficLightAgent(num_phases).to(device)
-    if entire_epoch != 0:
-        policy_net.load_state_dict(torch.load("trafficjam.weight"))
+    # if entire_epoch != 0:
+    policy_net.load_state_dict(torch.load("trafficjam.weight"))
     target_net = TrafficLightAgent(num_phases).to(device)
     target_net.load_state_dict(policy_net.state_dict())
 
@@ -225,8 +230,8 @@ for entire_epoch in range(350):
 
             if current_time > 670:
                 sumo_agent.terminate_sumo()
-                if entire_epoch * current_time > step_count + 50000:
-                    step_count += 50000
+                if entire_epoch * current_time > step_count + 25000:
+                    step_count += 25000
                 torch.save(policy_net.state_dict(), './trafficjam.weight')
                 torch.save(policy_net.state_dict(), './trafficjam.{}.weight'.format(str(step_count)))
                 print("Saved!")
