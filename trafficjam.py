@@ -28,7 +28,7 @@ class TrafficLightAgent(nn.Module):
     def __init__(self, num_actions):
         super(TrafficLightAgent, self).__init__()
 
-        self.shared_hidden_1 = nn.Linear(13, 20) # activation : Sigmoid
+        self.shared_hidden_1 = nn.Linear(15, 20) # activation : Sigmoid
 
         # Phase Gate - seperated routes by phases
         self.seperated_hidden_1 = nn.Linear(20, 20) # activation : Sigmoid

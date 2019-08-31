@@ -168,7 +168,8 @@ while current_time < RUN_COUNT:
             optimizer.zero_grad()
             output.backward()
             for param in policy_net.parameters():
-                param.grad.data.clamp_(-1, 1)
+                if param.grad is not None:
+                    param.grad.data.clamp_(-1, 1)
             optimizer.step()
 
     target_net_outdated += 1

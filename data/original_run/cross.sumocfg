@@ -4,7 +4,6 @@
         <net-file value="cross.net.xml" />
 
     <route-files value="cross.rou.xml" />
-    <additional-files value="cross.tls.switch.xml" />
     </input>
     <processing>
         <time-to-teleport value="-1" />
