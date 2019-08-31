@@ -161,7 +161,7 @@ output: four_lane_ids={'W':'edge1-0',"E":"edge2-0",'S':'edge4-0','N':'edge3-0'})
 '''
 
 
-def find_surrounding_lane_WESN(central_node_id="node0", WESN_node_ids={"W": "1", "E": "2", "S": "3", "N": "4"}):
+def find_surrounding_lane_WESN(central_node_id="gneJ10", WESN_node_ids={"W": "gneJ5", "E": "gneJ1", "S": "gneJ7", "N": "gneJ6"}):
     tree = ET.parse('./data/cross.net.xml')
     root = tree.getroot()
     four_lane_ids_dict = {}
@@ -188,8 +188,8 @@ def coordinate_mapper(x1, y1, x2, y2, area_length=600, area_width=600):
     width_num_grids = int(area_width / grid_width)
     return length_num_grids - y_max, length_num_grids - y_min, x_min, x_max
 
-def get_phase_affected_lane_traffic_max_volume(phase="NSG_SNG", tl_node_id="node0",
-                                 WESN_node_ids={"W": "1", "E": "2", "S": "3", "N": "4"}):
+def get_phase_affected_lane_traffic_max_volume(phase="NSG_SNG", tl_node_id="gneJ10",
+                                 WESN_node_ids={"W": "gneJ5", "E": "gneJ1", "S": "gneJ7", "N": "gneJ6"}):
     four_lane_ids_dict = find_surrounding_lane_WESN(central_node_id=tl_node_id, WESN_node_ids=WESN_node_ids)
     directions = phase.split('_')
     traffic_volume_start_end = []
@@ -207,8 +207,8 @@ def get_phase_affected_lane_traffic_max_volume(phase="NSG_SNG", tl_node_id="node
     return max(phase_volumes)
 
 
-def phase_affected_lane_position(phase="NSG_SNG", tl_node_id="node0",
-                                 WESN_node_ids={"W": "1", "E": "2", "S": "3", "N": "4"}):
+def phase_affected_lane_position(phase="NSG_SNG", tl_node_id="gneJ10",
+                                 WESN_node_ids={"W": "gneJ5", "E": "gneJ1", "S": "gneJ7", "N": "gneJ6"}):
     '''
     input: NSG_SNG ,central nodeid "node0", surrounding nodes WESN: {"W":"1", "E":"2", "S":"3", "N":"4"}
     output: edge-ids, 4_0_0, 4_0_1, 3_0_0, 3_0_1
@@ -230,8 +230,8 @@ def phase_affected_lane_position(phase="NSG_SNG", tl_node_id="node0",
     return indexes
 
 
-def phases_affected_lane_postions(phases=["NSG_SNG_NWG_SEG", "NEG_SWG_NWG_SEG"], tl_node_id="node0",
-                                  WESN_node_ids={"W": "1", "E": "2", "S": "3", "N": "4"}):
+def phases_affected_lane_postions(phases=["NSG_SNG_NWG_SEG", "NEG_SWG_NWG_SEG"], tl_node_id="gneJ10",
+                                  WESN_node_ids={"W": "gneJ5", "E": "gneJ1", "S": "gneJ7", "N": "gneJ6"}):
     parameterArray = []
     for phase in phases:
         parameterArray += phase_affected_lane_position(phase=phase, tl_node_id=tl_node_id, WESN_node_ids=WESN_node_ids)
@@ -275,7 +275,7 @@ def get_phase_vector(current_phase=0):
     return np.array(phase_vector)
 
 
-def getMapOfCertainTrafficLight(curtent_phase=0, tl_node_id="node0", area_length=600):
+def getMapOfCertainTrafficLight(curtent_phase=0, tl_node_id="gneJ10", area_length=600):
     current_phases_light_7 = [phases_light_7[curtent_phase]]
     parameterArray = phases_affected_lane_postions(phases=current_phases_light_7)
     length_num_grids = int(area_length / grid_width)
@@ -474,8 +474,9 @@ def status_calculator():
 
 def get_vehicle_id_entering():
     vehicle_id_entering = []
-    entering_lanes = ['edge1-0_0', 'edge1-0_1', 'edge1-0_2', 'edge2-0_0', 'edge2-0_1', 'edge2-0_2',
-                     'edge3-0_0', 'edge3-0_1', 'edge3-0_2', 'edge4-0_0', 'edge4-0_1', 'edge4-0_2']
+    entering_lanes = ['-gneE13_0','-gneE13_1','-gneE13_2', '-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3',
+                                 '-gneE16_0','-gneE16_1','-gneE16_2', '-gneE17_0','-gneE17_1',
+                                 '-gneE17_2', '-gneE17_3']
 
     for lane in entering_lanes:
         vehicle_id_entering.extend(traci.lane.getLastStepVehicleIDs(lane))
