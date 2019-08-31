@@ -104,8 +104,8 @@ for entire_epoch in range(500):
     target_net_outdated = 0
 
     policy_net = TrafficLightAgent(num_phases).to(device)
-    # if entire_epoch != 0:
-    policy_net.load_state_dict(torch.load("trafficjam.weight"))
+    if entire_epoch != 0:
+        policy_net.load_state_dict(torch.load("trafficjam.weight"))
     target_net = TrafficLightAgent(num_phases).to(device)
     target_net.load_state_dict(policy_net.state_dict())
 
