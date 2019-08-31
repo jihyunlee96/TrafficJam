@@ -116,11 +116,11 @@ class SumoAgent:
     def cal_reward(self, action):
         # get directly from sumo
         reward, reward_detail_dict = map_computor.get_rewards_from_sumo(self.dic_vehicles, action, self.para_set.REWARDS_INFO_DICT)
-        return reward*(1-0.8), reward_detail_dict
+        return reward * 0.2, reward_detail_dict
 
     def cal_reward_from_list(self, reward_detail_dict_list):
         reward = map_computor.get_rewards_from_dict_list(reward_detail_dict_list)
-        return reward*(1-0.8)
+        return reward * 0.2
 
 
 if __name__ == '__main__':

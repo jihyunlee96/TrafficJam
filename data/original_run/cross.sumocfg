@@ -3,8 +3,8 @@
     <input>
         <net-file value="cross.net.xml" />
 
-    <route-files value="cross.rou.xml" />
-    </input>
+    <route-files value="cross.rou.xml" /></input>
+
     <processing>
         <time-to-teleport value="-1" />
         <ignore-junction-blocker value="1" />
