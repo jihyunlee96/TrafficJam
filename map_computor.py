@@ -108,10 +108,13 @@ direction_list = ["NWG", "WSG", "SEG", "ENG", "NSG", "SNG", "EWG", "WEG", "NEG",
 #min_phase_time = [30, 96, 74]
 min_phase_time_7 = [10, 35]
 node_light_7 = "gneJ10"
-phases_light_7 = ["WNG_ESG_EWG_WEG_WSG_ENG", "NSG_NEG_SNG_SWG_NWG_SEG"]
-WNG_ESG_EWG_WEG_WSG_ENG = "grrr gGGG grrr gGGG".replace(" ", "")
-NSG_NEG_SNG_SWG_NWG_SEG = "gGGG grrr gGGG grrr".replace(" ", "")
-controlSignal = (WNG_ESG_EWG_WEG_WSG_ENG, NSG_NEG_SNG_SWG_NWG_SEG)
+phases_light_7 = ["NEG_NSG_NWG_ENG_SEG_WSG", "EWG_ESG_NWG_ENG_SEG_WSG", "SNG_SWG_NWG_ENG_SEG_WSG", "WEG_WNG_NWG_ENG_SEG_WSG"]
+NEG_NSG_NWG_ENG_SEG_WSG = "gGGGG Grrrrr grrr grrrr".replace(" ","")
+EWG_ESG_NWG_ENG_SEG_WSG = "grrrr gGGGGG Grrr grrrr".replace(" ","")
+SNG_SWG_NWG_ENG_SEG_WSG = "grrrr grrrrr gGGG Grrrr".replace(" ","")
+WEG_WNG_NWG_ENG_SEG_WSG = "Grrrr grrrrr grrr gGGGG".replace(" ","")
+
+controlSignal = (NEG_NSG_NWG_ENG_SEG_WSG, EWG_ESG_NWG_ENG_SEG_WSG, SNG_SWG_NWG_ENG_SEG_WSG, WEG_WNG_NWG_ENG_SEG_WSG)
 
 listLanes=['-gneE13_0','-gneE13_1','-gneE13_2', '-gneE15_0','-gneE15_1','-gneE15_2', '-gneE15_3',
                                  '-gneE16_0','-gneE16_1','-gneE16_2', '-gneE17_0','-gneE17_1',
