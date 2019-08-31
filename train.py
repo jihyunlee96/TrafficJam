@@ -89,7 +89,6 @@ def get_next_estimated_q_values(next_state, action):
 
 optimizer = optim.RMSprop(policy_net.parameters())
 
-update_outdated = current_time
 while current_time < RUN_COUNT:
     car_number, phase_id = sumo_agent.get_state()
     car_number = torch.from_numpy(car_number[0])
@@ -111,10 +110,6 @@ while current_time < RUN_COUNT:
 
     current_time = sumo_agent.get_current_time()
 
-
-    if current_time - update_outdated < 300: continue
-
-    update_outdated = current_time
     # update policy_net
     # calculate average reward
     average_reward = np.zeros((num_phases, num_phases))
