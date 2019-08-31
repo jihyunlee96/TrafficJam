@@ -99,7 +99,7 @@ class SumoAgent:
         # state를 인풋으로 받는 위치
         self.state = State(
             # 필요한 부분
-            num_of_vehicles=np.reshape(np.array(status_tracker[1]), newshape=(1, 12)),
+            num_of_vehicles=np.reshape(np.array(status_tracker[1]), newshape=(1, 14)),
             cur_phase=np.reshape(np.array([self.current_phase]), newshape=(1, 1)),
             next_phase=np.reshape(np.array([(self.current_phase + 1) % len(self.ParaSet.MIN_PHASE_TIME)]), newshape=(1, 1)),
             time_this_phase=np.reshape(np.array([self.current_phase_duration]), newshape=(1, 1)),

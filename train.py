@@ -55,7 +55,7 @@ RUN_COUNT = 216000
 GAMMA = 0.8 
 UPDATE_TARGET_NET_FREQ = 5
 
-setting_memo = "one_run"
+setting_memo = "original_run"
 
 sumoBinary = checkBinary('sumo-gui')
 sumoCmd = [sumoBinary,

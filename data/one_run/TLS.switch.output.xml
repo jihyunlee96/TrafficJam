@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 08/31/19 10:43:34 by Eclipse SUMO GUI Version 1.3.1
+<!-- generated on 08/31/19 11:07:47 by Eclipse SUMO GUI Version 1.3.1
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
@@ -20,7 +20,7 @@
     </report>
 
     <traci_server>
-        <remote-port value="56323"/>
+        <remote-port value="56386"/>
     </traci_server>
 
 </configuration>
@@ -47,9 +47,4 @@
     <tlsState time="17.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
     <tlsState time="18.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
     <tlsState time="19.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
-    <tlsState time="20.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
-    <tlsState time="21.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
-    <tlsState time="22.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
-    <tlsState time="23.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
-    <tlsState time="24.00" id="node0" programID="0" phase="0" state="grrrgGGGgrrrgGGG"/>
 </tlsStates>
