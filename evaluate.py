@@ -17,8 +17,8 @@ class ParaSet:
         
     RUN_COUNTS = 216000
     BASE_RATIO = [10, 10]
-    TRAFFIC_FILE = ["cross.rou_0.xml", "cross.rou_1.xml", "cross.rou_2.xml", "cross.rou_3.xml", "cross.rou_4.xml", "cross.rou_5.xml"]
-    SUMOCFG_FILE = ["cross_0.sumocfg", "cross_1.sumocfg", "cross_2.sumocfg", "cross_3.sumocfg", "cross_4.sumocfg", "cross_5.sumocfg"]
+    TRAFFIC_FILE = ["cross.rou_0.xml", "cross.rou_1.xml", "cross.rou_2.xml", "cross.rou_3.xml", "cross.rou_4.xml", "cross.rou_5.xml", "cross.rou_1_low.xml", "cross.rou_2_low.xml", "cross.rou_3_low.xml", "cross.rou_4_low.xml", "cross.rou_5_low.xml"]
+    SUMOCFG_FILE = ["cross_0.sumocfg", "cross_1.sumocfg", "cross_2.sumocfg", "cross_3.sumocfg", "cross_4.sumocfg", "cross_5.sumocfg", "cross_1_low.sumocfg", "cross_2_low.sumocfg", "cross_3_low.sumocfg", "cross_4_low.sumocfg", "cross_5_low.sumocfg"]
     MODEL_NAME = "TrafficJAM"
     EPSILON = 0.05
 
@@ -62,7 +62,7 @@ def unison_shuffled_copies(states, target, sample_weight):
     new_states.append(states[p])
     return new_states, target[p], sample_weight[p]
 
-index = random.randint(0, 5)
+index = random.randint(6, 10)
 traffic_file = [ParaSet.TRAFFIC_FILE[index]]
 sumocfg_file = ParaSet.SUMOCFG_FILE[index]
 
@@ -98,7 +98,7 @@ for entire_epoch in range(35):
 
     policy_net = TrafficLightAgent(num_phases).to(device)
     if entire_epoch != 0:
-        policy_net.load_state_dict(torch.load("trafficjam.weight"))
+        policy_net.load_state_dict(torch.load("trafficjam.200000.weight"))
     target_net = TrafficLightAgent(num_phases).to(device)
     target_net.load_state_dict(policy_net.state_dict())
 

@@ -75,7 +75,7 @@ step_count = 0
 
 for entire_epoch in range(350):
 
-    index = random.randint(0, 10)
+    index = random.randint(6, 10)
     traffic_file = [ParaSet.TRAFFIC_FILE[index]]
     sumocfg_file = ParaSet.SUMOCFG_FILE[index]
 
