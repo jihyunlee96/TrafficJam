@@ -352,15 +352,17 @@ def get_rewards_from_sumo(vehicle_dict, action, rewards_info_dict,
     import copy
     reward_detail_dict = copy.deepcopy(rewards_info_dict)
     reward_detail_dict['queue_length'].append(get_overall_queue_length(listLanes))
-    reward = reward_detail_dict['queue_length'][2]
+    reward = -reward_detail_dict['queue_length'][2]
+    reward = restrict_reward(reward)
     
-    return -reward, reward_detail_dict
+    return reward, reward_detail_dict
 
 def get_rewards_from_dict_list(rewards_detail_dict_list):
     reward = 0
     for i in range(len(rewards_detail_dict_list)):
-        reward += rewards_detail_dict_list[i]['queue_length'][2]
-    return -reward
+        reward -= rewards_detail_dict_list[i]['queue_length'][2]
+    reward = restrict_reward(reward)
+    return reward
 
 def get_overall_queue_length(listLanes):
     overall_queue_length = 0
@@ -368,20 +370,6 @@ def get_overall_queue_length(listLanes):
         overall_queue_length += traci.lane.getLastStepHaltingNumber(lane)
     return overall_queue_length
 
-def get_overall_waiting_time(listLanes):
-    overall_waiting_time = 0
-    for lane in listLanes:
-        overall_waiting_time += traci.lane.getWaitingTime(str(lane)) / 60.0
-    return overall_waiting_time
-
-def get_overall_delay(listLanes):
-    overall_delay = 0
-    for lane in listLanes:
-        overall_delay += 1 - traci.lane.getLastStepMeanSpeed(str(lane)) / traci.lane.getMaxSpeed(str(lane))
-    return overall_delay
-
-def get_flickering(action):
-    return action
 
 # calculate number of emergency stops by vehicle
 def get_num_of_emergency_stops(vehicle_dict):
@@ -400,27 +388,6 @@ def get_num_of_emergency_stops(vehicle_dict):
                 emergency_stops += 1
     if len(vehicle_dict) > 0:
         return emergency_stops/len(vehicle_dict)
-    else:
-        return 0
-
-def get_partial_travel_time_duration(vehicle_dict, vehicle_id_list):
-    travel_time_duration = 0
-    for vehicle_id in vehicle_id_list:
-        if (vehicle_id in vehicle_dict.keys()) and (vehicle_dict[vehicle_id].first_stop_time != -1):
-            travel_time_duration += (traci.simulation.getCurrentTime() / 1000 - vehicle_dict[vehicle_id].first_stop_time)/60.0
-    if len(vehicle_id_list) > 0:
-        return travel_time_duration#/len(vehicle_id_list)
-    else:
-        return 0
-
-
-def get_travel_time_duration(vehicle_dict, vehicle_id_list):
-    travel_time_duration = 0
-    for vehicle_id in vehicle_id_list:
-        if (vehicle_id in vehicle_dict.keys()):
-            travel_time_duration += (traci.simulation.getCurrentTime() / 1000 - vehicle_dict[vehicle_id].enter_time)/60.0
-    if len(vehicle_id_list) > 0:
-        return travel_time_duration#/len(vehicle_id_list)
     else:
         return 0
 
