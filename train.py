@@ -73,7 +73,7 @@ setting_memo = "original_run"
 #sumo_agent = SumoAgent(sumoCmd)
 step_count = 0
 
-for entire_epoch in range(350):
+for entire_epoch in range(500):
 
     if entire_epoch < 250:
         index = random.randint(11, 15)
