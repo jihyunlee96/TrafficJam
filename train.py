@@ -71,6 +71,7 @@ setting_memo = "original_run"
 
 # 이걸 바꾸면 GUI On/Off를 조절할 수 있다.
 #sumo_agent = SumoAgent(sumoCmd)
+step_count = 0
 
 for entire_epoch in range(350):
 
@@ -224,10 +225,13 @@ for entire_epoch in range(350):
 
             if current_time > 670:
                 sumo_agent.terminate_sumo()
+                if entire_epoch * current_time > step_count + 50000:
+                    step_count += 50000
                 torch.save(policy_net.state_dict(), './trafficjam.weight')
+                torch.save(policy_net.state_dict(), './trafficjam.{}.weight'.format(str(step_count)))
                 print("Saved!")
                 break
-    print("End of epoch {}".format(entire_epoch))
+    print("End of epoch {}".format(str(entire_epoch)))
 
 
 
