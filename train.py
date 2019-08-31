@@ -14,7 +14,7 @@ class ParaSet:
         
     RUN_COUNTS = 216000
     BASE_RATIO = [10, 10]
-    TRAFFIC_FILE = ["cross.2phases_rou1_switch_rou0.xml"]
+    TRAFFIC_FILE = ["cross.rou.xml"]
     MODEL_NAME = "TrafficJAM"
 
 def build_memory(num_phases):

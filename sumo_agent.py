@@ -26,7 +26,7 @@ from agent import State
 class SumoAgent:
     
     class ParaSet:
-        MIN_PHASE_TIME = [0, 0]
+        MIN_PHASE_TIME = [0, 0, 0, 0]
         MIN_ACTION_TIME = 5
         REWARDS_INFO_DICT = {
                 'queue_length' : [True, -1],
@@ -66,7 +66,12 @@ class SumoAgent:
 
     def take_action(self, action, phase):
         current_phase_number = self.get_current_phase()
+        print(current_phase_number)
         rewards_detail_dict_list = []
+        if int(action) == int(phase):
+            changed = False
+        else:
+            changed = True
         # 현재 신호가 최소 지속 시간을 넘지 않았다면 action은 유지
         if (self.current_phase_duration < self.ParaSet.MIN_PHASE_TIME[current_phase_number]):
             action = phase
@@ -86,6 +91,7 @@ class SumoAgent:
                                                                                vehicle_dict=self.dic_vehicles,
                                                                                rewards_info_dict=self.ParaSet.REWARDS_INFO_DICT,
                                                                                f_log_rewards=self.f_log_rewards,
+                                                                               changed=changed,
                                                                                rewards_detail_dict_list=rewards_detail_dict_list)  # run 1s SUMO
 
         reward = self.cal_reward_from_list(rewards_detail_dict_list)
@@ -110,11 +116,11 @@ class SumoAgent:
     def cal_reward(self, action):
         # get directly from sumo
         reward, reward_detail_dict = map_computor.get_rewards_from_sumo(self.dic_vehicles, action, self.para_set.REWARDS_INFO_DICT)
-        return reward, reward_detail_dict
+        return reward*(1-0.8), reward_detail_dict
 
     def cal_reward_from_list(self, reward_detail_dict_list):
         reward = map_computor.get_rewards_from_dict_list(reward_detail_dict_list)
-        return reward
+        return reward*(1-0.8)
 
 
 if __name__ == '__main__':

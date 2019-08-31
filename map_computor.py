@@ -257,9 +257,9 @@ def translateAction(action):
 
 
 
-def changeTrafficLight_7(current_phase=0):  # [WNG_ESG_WSG_ENG_NWG_SEG]
+def changeTrafficLight_7(current_phase=0, action=0):  # [WNG_ESG_WSG_ENG_NWG_SEG]
     # phases=["WNG_ESG_WSG_ENG_NWG_SEG","EWG_WEG_WSG_ENG_NWG_SEG","NSG_NEG_SNG_SWG_WSG_ENG_NWG_SEG"]
-    next_phase = (current_phase + 1) % len(controlSignal)
+    next_phase = action # (current_phase + 1) % len(controlSignal)
     next_phase_time_eclipsed = 0
     traci.trafficlight.setRedYellowGreenState(node_light_7, controlSignal[next_phase])
     return next_phase, next_phase_time_eclipsed
@@ -550,13 +550,13 @@ def set_all_red(dic_vehicles,rewards_info_dict,f_log_rewards,rewards_detail_dict
         log_rewards(dic_vehicles, 0, rewards_info_dict, f_log_rewards, timestamp,rewards_detail_dict_list)
         update_vehicles_state(dic_vehicles)
 
-def run(action, current_phase, current_phase_duration, vehicle_dict, rewards_info_dict, f_log_rewards, rewards_detail_dict_list,node_id="gneJ10"):
+def run(action, current_phase, current_phase_duration, vehicle_dict, rewards_info_dict, f_log_rewards, rewards_detail_dict_list,node_id="gneJ10", changed=False):
     return_phase = current_phase
     return_phase_duration = current_phase_duration
-    if action == 1:
+    if changed:
         set_yellow(vehicle_dict,rewards_info_dict,f_log_rewards, rewards_detail_dict_list,node_id=node_id)
         # set_all_red(vehicle_dict,rewards_info_dict,f_log_rewards, node_id=node_id)
-        return_phase, _ = changeTrafficLight_7(current_phase=current_phase)  # change traffic light in SUMO according to actionToPerform
+        return_phase, _ = changeTrafficLight_7(current_phase=current_phase, action=action)  # change traffic light in SUMO according to actionToPerform
         return_phase_duration = 0
     timestamp = traci.simulation.getCurrentTime() / 1000
     traci.simulationStep()
