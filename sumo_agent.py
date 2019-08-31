@@ -29,7 +29,8 @@ class SumoAgent:
         MIN_PHASE_TIME = [0, 0, 0, 0]
         MIN_ACTION_TIME = 5
         REWARDS_INFO_DICT = {
-                'queue_length' : [True, -1],
+                'queue_length' : [True, -0.25],
+                'delay' : [True, -0.25]
         }        
     
     def __init__(self, sumo_cmd_str):
