@@ -367,6 +367,8 @@ def get_rewards_from_sumo(vehicle_dict, action, rewards_info_dict,
     reward_detail_dict = copy.deepcopy(rewards_info_dict)
     reward_detail_dict['queue_length'].append(get_overall_queue_length(listLanes))
     reward_detail_dict['delay'].append(get_overall_delay(listLanes))
+    reward_detail_dict['wait_time'].append(get_overall_waiting_time(listLanes))
+
 
     for k, v in reward_detail_dict.items():
         if v[0]:  # True or False
@@ -394,6 +396,12 @@ def get_overall_delay(listLanes):
     for lane in listLanes:
         overall_delay += 1 - traci.lane.getLastStepMeanSpeed(str(lane)) / traci.lane.getMaxSpeed(str(lane))
     return overall_delay
+
+def get_overall_waiting_time(listLanes):
+    overall_waiting_time = 0
+    for lane in listLanes:
+        overall_waiting_time += traci.lane.getWaitingTime(str(lane)) / 60.0
+    return overall_waiting_time
 
 # calculate number of emergency stops by vehicle
 def get_num_of_emergency_stops(vehicle_dict):
